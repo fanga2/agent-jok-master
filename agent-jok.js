@@ -62,6 +62,7 @@ let negotiationState = {
 let polite = false; // Set to true to force agent to only respond to offers addressed to it; false will yield rude behavior
 let logLevel = 1;
 
+
 if (argv.level) {
   logLevel = argv.level;
   logExpression(`Setting log level to ${logLevel}`, 1);
@@ -661,6 +662,7 @@ function processMessage(message) {
         }
       }else if (addressee == agentName && interpretation.type == "Quality"){
         messageResponse.text = selectMessage(qualityMessages);
+        return messageResponse
 	  }
       else { // None of the specific cases are satisfied; don't take any action
         return Promise.resolve(null);
@@ -716,11 +718,20 @@ function getSafe(p, o, d) {
 function translateBid(bid, confirm) {
   let text = "";
   if(bid.type == 'SellOffer') {
-    text = "How about if I sell you";
-    Object.keys(bid.quantity).forEach(good => {
-      text += " " + bid.quantity[good] + " " + good;
-    });
-    text += " for " + bid.price.value + " " + bid.price.unit + ".";
+    if(bid.price.value > 5){
+      text += "Because your total is over 5 dollars I will offer a discount of 1 dollar. You will get";
+      Object.keys(bid.quantity).forEach(good => {
+        text += " " + bid.quantity[good] + " " + good;
+      });
+      const disval = bid.price.value - 1
+      text += " for  the discounted price of " + disval + " " + bid.price.unit + ".";
+	}else {
+      text = "How about if I sell you";
+      Object.keys(bid.quantity).forEach(good => {
+        text += " " + bid.quantity[good] + " " + good;
+      });
+      text += " for " + bid.price.value + " " + bid.price.unit + ".";
+    }
   }
   else if(bid.type == 'Reject') {
     text = selectMessage(rejectionMessages);
