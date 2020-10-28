@@ -58,8 +58,28 @@ function interpretMessage(watsonResponse) {
   }
   else if (intents[0].intent == "Quality" && intents[0].confidence > 0.2) {
     cmd = {
-      type: "Quality"  
-	};
+      type: "Quality"
+	   };
+  }
+  else if (intents[0].intent == "HighPrice" && intents[0].confidence > 0.2) {
+    cmd = {
+      type: "HighPrice"
+     };
+  }
+  else if (intents[0].intent == "Help" && intents[0].confidence > 0.2) {
+    cmd = {
+      type: "Help"
+     };
+  }
+  else if (intents[0].intent == "WhatGoods" && intents[0].confidence > 0.2) {
+    cmd = {
+      type: "WhatGoods"
+     };
+  }
+  else if (intents[0].intent == "NegotiatePrice" && intents[0].confidence > 0.2) {
+    cmd = {
+      type: "NegotiatePrice"
+     };
   }
   else {
     cmd = {

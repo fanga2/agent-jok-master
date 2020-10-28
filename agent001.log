@@ -1,0 +1,38 @@
+[2020-10-28 03:27:53.26] Error: 
+[2020-10-28 03:27:53.26]
+{
+  "name": "RequestError",
+  "message": "Error: socket hang up",
+  "cause": {
+    "code": "ECONNRESET"
+  },
+  "error": {
+    "code": "ECONNRESET"
+  },
+  "options": {
+    "method": "POST",
+    "uri": "http://localhost:14010/relayMessage",
+    "body": {
+      "text": "How about if I sell you 1 egg for 1.04 USD.",
+      "speaker": "Watson",
+      "role": "seller",
+      "addressee": "Human",
+      "environmentUUID": "abcdefg",
+      "timeStamp": "2020-10-28T08:25:53.242Z",
+      "bid": {
+        "quantity": {
+          "egg": 1
+        },
+        "type": "SellOffer",
+        "price": {
+          "unit": "USD",
+          "value": 1.04
+        }
+      }
+    },
+    "json": true,
+    "simple": true,
+    "resolveWithFullResponse": false,
+    "transform2xxOnly": false
+  }
+}

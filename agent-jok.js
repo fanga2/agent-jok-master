@@ -1,11 +1,16 @@
-const envLoaded = require('dotenv').load({silent: true});
+const envLoaded = require('dotenv').load({
+  silent: true
+});
 if (!envLoaded) console.log('warning:', __filename, '.env cannot be found');
 
 const appSettings = require('./appSettings.json');
 const http = require('http');
 const express = require('express');
 let request = require('request-promise');
-const { logExpression, setLogLevel } = require('@cisl/zepto-logger');
+const {
+  logExpression,
+  setLogLevel
+} = require('@cisl/zepto-logger');
 // logExpression is like console.log, but it also
 //   * outputs a timestamp
 //   * first argument takes text or JSON and handles it appropriately
@@ -15,8 +20,13 @@ const { logExpression, setLogLevel } = require('@cisl/zepto-logger');
 let methodOverride = require('method-override');
 let bodyParser = require('body-parser');
 
-const {classifyMessage} = require('./conversation.js');
-const {extractBidFromMessage, interpretMessage} = require('./extract-bid.js');
+const {
+  classifyMessage
+} = require('./conversation.js');
+const {
+  extractBidFromMessage,
+  interpretMessage
+} = require('./extract-bid.js');
 const argv = require('minimist')(process.argv.slice(2));
 
 let myPort = argv.port || appSettings.defaultPort || 14007;
@@ -27,6 +37,7 @@ const defaultSpeaker = 'Jeff';
 const defaultAddressee = agentName;
 const defaultRoundDuration = 600;
 const defaultRoundId = 0;
+let discount = false;
 
 let roundId;
 
@@ -80,7 +91,9 @@ const app = express();
 
 app.set('port', process.env.PORT || myPort);
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
 app.use(methodOverride());
 
 let utilityInfo = null;
@@ -95,19 +108,25 @@ let bidHistory;
 // triggers the start of a round and the associated timer.
 app.post('/setUtility', (req, res) => {
   logExpression("Inside setUtility (POST).", 2);
-  if(req.body) {
+  if (req.body) {
     roundId = req.body.roundId;
     utilityInfo = req.body;
     logExpression("Received utilityInfo: ", 2);
     logExpression(utilityInfo, 2);
     agentName = utilityInfo.name || agentName;
     logExpression("agentName: " + agentName, 2);
-    let msg = {roundId, "status": "Acknowledged", "utility": utilityInfo};
+    let msg = {
+      roundId,
+      "status": "Acknowledged",
+      "utility": utilityInfo
+    };
     logExpression(msg, 2);
     res.json(msg);
-  }
-  else {
-    let msg = {"status": "Failed; no message body", "utility": null};
+  } else {
+    let msg = {
+      "status": "Failed; no message body",
+      "utility": null
+    };
     logExpression(msg, 2);
     res.json(msg);
   }
@@ -117,7 +136,7 @@ app.post('/setUtility', (req, res) => {
 app.post('/startRound', (req, res) => {
   logExpression("Inside startRound (POST).", 2);
   bidHistory = {};
-  if(req.body) {
+  if (req.body) {
     negotiationState.roundDuration = req.body.roundDuration || negotiationState.roundDuration;
     negotiationState.roundId = req.body.roundId || negotiationState.roundId;
   }
@@ -126,7 +145,10 @@ app.post('/startRound', (req, res) => {
   negotiationState.stopTime = new Date(negotiationState.startTime.getTime() + 1000 * negotiationState.roundDuration);
   logExpression("Negotiation state is: ", 2);
   logExpression(negotiationState, 2);
-  let msg = {roundId, "status": "Acknowledged"};
+  let msg = {
+    roundId,
+    "status": "Acknowledged"
+  };
   res.json(msg);
 });
 
@@ -137,7 +159,10 @@ app.post('/endRound', (req, res) => {
   negotiationState.endTime = new Date();
   logExpression("Negotiation state is: ", 2);
   logExpression(negotiationState, 2);
-  let msg = {roundId, "status": "Acknowledged"};
+  let msg = {
+    roundId,
+    "status": "Acknowledged"
+  };
   res.json(msg);
 });
 
@@ -145,21 +170,20 @@ app.post('/endRound', (req, res) => {
 // and if it desires sends a separate message to the /receiveMessage route of the environment orchestrator
 app.post('/receiveMessage', (req, res) => {
   logExpression("Inside receiveMessage (POST).", 2);
-  let timeRemaining = ((new Date(negotiationState.stopTime)).getTime() - (new Date()).getTime())/ 1000.0;
+  let timeRemaining = ((new Date(negotiationState.stopTime)).getTime() - (new Date()).getTime()) / 1000.0;
   logExpression("Remaining time: " + timeRemaining, 2);
   logExpression("Negotiation state: " + negotiationState.active, 2);
   logExpression("POSTed body: ", 2);
   logExpression(req.body, 2);
-  if(timeRemaining <= 0) negotiationState.active = false;
+  if (timeRemaining <= 0) negotiationState.active = false;
 
   let response = null;
 
-  if(!req.body) {
+  if (!req.body) {
     response = {
       "status": "Failed; no message body"
     };
-  }
-  else if(negotiationState.active) { // We received a message and time remains in the round.
+  } else if (negotiationState.active) { // We received a message and time remains in the round.
     let message = req.body;
     message.speaker = message.speaker || defaultSpeaker;
     message.addressee = message.addressee;
@@ -174,19 +198,18 @@ app.post('/receiveMessage', (req, res) => {
     logExpression(message, 2);
 
     processMessage(message)
-    .then(bidMessage => {
-      logExpression("Bid message is: ", 2);
-      logExpression(bidMessage, 2);
-      if(bidMessage) { // If warranted, proactively send a new negotiation message to the environment orchestrator
-        sendMessage(bidMessage);
-      }
-    })
-    .catch(error => {
-      logExpression("Did not send message; encountered error: ", 1);
-      logExpression(error, 1);
-    });
-  }
-  else { // Either there's no body or the round is over.
+      .then(bidMessage => {
+        logExpression("Bid message is: ", 2);
+        logExpression(bidMessage, 2);
+        if (bidMessage) { // If warranted, proactively send a new negotiation message to the environment orchestrator
+          sendMessage(bidMessage);
+        }
+      })
+      .catch(error => {
+        logExpression("Did not send message; encountered error: ", 1);
+        logExpression(error, 1);
+      });
+  } else { // Either there's no body or the round is over.
     response = {
       status: "Failed; round not active"
     };
@@ -199,18 +222,17 @@ app.post('/receiveMessage', (req, res) => {
 // (or rather to explain why we are not able to confirm acceptance of an offer).
 app.post('/receiveRejection', (req, res) => {
   logExpression("Inside receiveRejection (POST).", 2);
-  let timeRemaining = ((new Date(negotiationState.stopTime)).getTime() - (new Date()).getTime())/ 1000.0;
+  let timeRemaining = ((new Date(negotiationState.stopTime)).getTime() - (new Date()).getTime()) / 1000.0;
   logExpression("Remaining time: " + timeRemaining, 2);
   logExpression("POSTed body: ", 2);
   logExpression(req.body, 2);
-  if(timeRemaining <= 0) negotiationState.active = false;
+  if (timeRemaining <= 0) negotiationState.active = false;
   let response = null;
-  if(!req.body) {
+  if (!req.body) {
     response = {
       "status": "Failed; no message body"
     };
-  }
-  else if(negotiationState.active) { // We received a message and time remains in the round.
+  } else if (negotiationState.active) { // We received a message and time remains in the round.
     let message = req.body;
     logExpression("Rejected message is: ", 2);
     logExpression(message, 2);
@@ -219,7 +241,7 @@ app.post('/receiveRejection', (req, res) => {
       status: "Acknowledged",
       message
     };
-    if(
+    if (
       message.rationale &&
       message.rationale == "Insufficient budget" &&
       message.bid &&
@@ -249,7 +271,7 @@ app.post('/receiveRejection', (req, res) => {
 // GET API route that simply calls Watson Assistant on the supplied text message to obtain intent and entities
 app.get('/classifyMessage', (req, res) => {
   logExpression("Inside classifyMessage (GET).", 2);
-  if(req.query.text) {
+  if (req.query.text) {
     let text = req.query.text;
     let message = { // Hard-code the speaker, role and envUUID
       text,
@@ -261,19 +283,19 @@ app.get('/classifyMessage', (req, res) => {
     logExpression("Message is: ", 2);
     logExpression(message, 2);
     return classifyMessage(message)
-    .then(waResponse => {
-      waResponse.roundId = roundId;
-      logExpression("Response from Watson Assistant: ", 2);
-      logExpression(waResponse, 2);
-      res.json(waResponse);
-    });
+      .then(waResponse => {
+        waResponse.roundId = roundId;
+        logExpression("Response from Watson Assistant: ", 2);
+        logExpression(waResponse, 2);
+        res.json(waResponse);
+      });
   }
 });
 
 // POST API route that simply calls Watson Assistant on the supplied text message to obtain intents and entities
 app.post('/classifyMessage', (req, res) => {
   logExpression("Inside classifyMessage (POST).", 2);
-  if(req.body) {
+  if (req.body) {
     let message = req.body;
     message.speaker = message.speaker || defaultSpeaker;
     message.addressee = message.addressee || null;
@@ -282,17 +304,17 @@ app.post('/classifyMessage', (req, res) => {
     logExpression("Message is: ", 2);
     logExpression(message, 2);
     return classifyMessage(message)
-    .then(waResponse => {
-      waResponse.roundId = roundId;
-      logExpression("Response from Watson Assistant : ", 2);
-      logExpression(waResponse, 2);
-      res.json(waResponse);
-    })
-    .catch(err => {
-      logExpression("Error from Watson Assistant: ", 2);
-      logExpression(err, 2);
-      res.json(err);
-    });
+      .then(waResponse => {
+        waResponse.roundId = roundId;
+        logExpression("Response from Watson Assistant : ", 2);
+        logExpression(waResponse, 2);
+        res.json(waResponse);
+      })
+      .catch(err => {
+        logExpression("Error from Watson Assistant: ", 2);
+        logExpression(err, 2);
+        res.json(err);
+      });
   }
 });
 
@@ -301,7 +323,7 @@ app.post('/classifyMessage', (req, res) => {
 // and formatting this information in the form of a structured bid.
 app.post('/extractBid', (req, res) => {
   logExpression("Inside extractBid (POST).", 2);
-  if(req.body) {
+  if (req.body) {
     let message = req.body;
     message.speaker = message.speaker || defaultSpeaker;
     message.addressee = message.addressee || null;
@@ -310,29 +332,30 @@ app.post('/extractBid', (req, res) => {
     logExpression("Message is: ", 2);
     logExpression(message, 2);
     return extractBidFromMessage(message)
-    .then(extractedBid => {
-      extractedBid.roundId = roundId;
-      logExpression("Extracted bid : ", 2);
-      logExpression(extractedBid, 2);
-      res.json(extractedBid);
-    })
-    .catch(err => {
-      logExpression("Error extracting bid: ", 2);
-      logExpression(err, 2);
-      res.json(err);
-    });
+      .then(extractedBid => {
+        extractedBid.roundId = roundId;
+        logExpression("Extracted bid : ", 2);
+        logExpression(extractedBid, 2);
+        res.json(extractedBid);
+      })
+      .catch(err => {
+        logExpression("Error extracting bid: ", 2);
+        logExpression(err, 2);
+        res.json(err);
+      });
   }
 });
 
 // API route that reports the current utility information.
 app.get('/reportUtility', (req, res) => {
   logExpression("Inside reportUtility (GET).", 2);
-  if(utilityInfo) {
+  if (utilityInfo) {
     utilityInfo.roundId = roundId;
     res.json(utilityInfo);
-  }
-  else {
-    res.json({"error": "utilityInfo not initialized."});
+  } else {
+    res.json({
+      "error": "utilityInfo not initialized."
+    });
   }
 });
 
@@ -380,16 +403,14 @@ function calculateUtilitySeller(utilityInfo, bundle) {
   let util = 0;
   let price = getSafe(['price', 'value'], bundle, 0);
   logExpression("Extracted price from bundle: " + price, 2);
-  if(bundle.quantity) {
+  if (bundle.quantity) {
     util = price;
     unit = getSafe(['price', 'unit'], bundle, null);
-    if(!unit) { // Check units -- not really used, but a good practice in case we want to support currency conversion some day
+    if (!unit) { // Check units -- not really used, but a good practice in case we want to support currency conversion some day
       logExpression("No currency units provided.", 2);
-    }
-    else if(unit == utilityInfo.currencyUnit) {
+    } else if (unit == utilityInfo.currencyUnit) {
       logExpression("Currency units match.", 2);
-    }
-    else {
+    } else {
       logExpression("WARNING: Currency units do not match!", 2);
     }
     Object.keys(bundle.quantity).forEach(good => {
@@ -419,21 +440,23 @@ function generateBid(offer) {
   logExpression("myRecentOffers is: ", 2);
   logExpression(myRecentOffers, 2);
   let myLastPrice = null;
-  if(myRecentOffers.length) {
-    myLastPrice = myRecentOffers[myRecentOffers.length-1].price.value;
+  if (myRecentOffers.length) {
+    myLastPrice = myRecentOffers[myRecentOffers.length - 1].price.value;
     logExpression("My most recent price offer was " + myLastPrice, 2);
   }
-  let timeRemaining = ((new Date(negotiationState.stopTime)).getTime() - (new Date()).getTime())/ 1000.0;
+  let timeRemaining = ((new Date(negotiationState.stopTime)).getTime() - (new Date()).getTime()) / 1000.0;
   logExpression("There are " + timeRemaining + " seconds remaining in this round.", 3);
 
   let utility = calculateUtilitySeller(utilityInfo, offer);
   logExpression("From calculateUtilitySeller, utility of offer is computed to be: " + utility, 2);
 
-// Note that we are making no effort to upsell the buyer on a different package of goods than what they requested.
-// It would be legal to do so, and perhaps profitable in some situations -- consider doing that!
-  let bid = {quantity: offer.quantity};
+  // Note that we are making no effort to upsell the buyer on a different package of goods than what they requested.
+  // It would be legal to do so, and perhaps profitable in some situations -- consider doing that!
+  let bid = {
+    quantity: offer.quantity
+  };
 
-  if(offer.price && offer.price.value) { // The buyer included a proposed price, which we must take into account
+  if (offer.price && offer.price.value) { // The buyer included a proposed price, which we must take into account
     let bundleCost = offer.price.value - utility;
 
     let markupRatio = utility / bundleCost;
@@ -441,21 +464,18 @@ function generateBid(offer) {
     if (markupRatio > 2.0 || (myLastPrice != null && Math.abs(offer.price - myLastPrice) < minDicker)) { // If our markup is large, accept the offer
       bid.type = 'Accept';
       bid.price = offer.price;
-    }
-    else if (markupRatio < -0.5) { // If buyer's offer is substantially below our cost, reject their offer
+    } else if (markupRatio < -0.5) { // If buyer's offer is substantially below our cost, reject their offer
       bid.type = 'Reject';
       bid.price = null;
-    }
-    else { // If buyer's offer is in a range where an agreement seems possible, generate a counteroffer
+    } else { // If buyer's offer is in a range where an agreement seems possible, generate a counteroffer
       bid.type = 'SellOffer';
       bid.price = generateSellPrice(bundleCost, offer.price, myLastPrice, timeRemaining);
-      if(bid.price.value < offer.price.value + minDicker) {
+      if (bid.price.value < offer.price.value + minDicker) {
         bid.type = 'Accept';
         bid.price = offer.price;
       }
     }
-  }
-  else { // The buyer didn't include a proposed price, leaving us free to consider how much to charge.
+  } else { // The buyer didn't include a proposed price, leaving us free to consider how much to charge.
     // Set markup between 2 and 3 times the cost of the bundle and generate price accordingly.
     let markupRatio = 2.0 + Math.random();
     let bundleCost = -1.0 * utility; // Utility is -1 * bundle cost since price is interpreted as 0
@@ -483,12 +503,11 @@ function generateSellPrice(bundleCost, offerPrice, myLastPrice, timeRemaining) {
   logExpression("timeRemaining: " + timeRemaining, 2);
   let minMarkupRatio;
   let maxMarkupRatio;
-  let markupRatio = offerPrice.value/bundleCost - 1.0;
-  if(myLastPrice != null) {
-    maxMarkupRatio = myLastPrice/bundleCost - 1.0;
-  }
-  else {
-    maxMarkupRatio = 2.0 - 1.5 * (1.0 - timeRemaining/negotiationState.roundDuration); // Linearly decrease max markup ratio towards just 0.5 at the conclusion of the round
+  let markupRatio = offerPrice.value / bundleCost - 1.0;
+  if (myLastPrice != null) {
+    maxMarkupRatio = myLastPrice / bundleCost - 1.0;
+  } else {
+    maxMarkupRatio = 2.0 - 1.5 * (1.0 - timeRemaining / negotiationState.roundDuration); // Linearly decrease max markup ratio towards just 0.5 at the conclusion of the round
   }
   minMarkupRatio = Math.max(markupRatio, 0.20);
 
@@ -522,163 +541,193 @@ function processMessage(message) {
   logExpression("In processMessage, message is: ", 2);
   logExpression(message, 2);
   return classifyMessage(message)
-  .then(classification => {
-    classification.environmentUUID = message.environmentUUID;
-    logExpression("Classification from classify message: ", 2);
-    logExpression(classification, 2);
-    return interpretMessage(classification);
-  })
-  .then(interpretation => {
-    logExpression("interpretation is: ", 2);
-    logExpression(interpretation, 2);
-    let speaker = interpretation.metadata.speaker;
-    let addressee = interpretation.metadata.addressee;
-    let message_speaker_role = interpretation.metadata.role;
-    if(speaker == agentName) { // The message was from me; this means that the system allowed it to go through.
-      logExpression("This message is from me! I'm not going to talk to myself.", 2);
-      // If the message from me was an accept or reject, wipe out the bidHistory with this particular negotiation partner
-      // Otherwise, add the message to the bid history with this negotiation partner
-      if (interpretation.type == 'AcceptOffer' || interpretation.type == 'RejectOffer') {
-          bidHistory[addressee] = null;
-      }
-      else {
-        if(bidHistory[addressee]) {
-          bidHistory[addressee].push(interpretation);
-        }
-      }
-    }
-    else if (message_speaker_role == "buyer") { // Message is from a buyer
-      logExpression("Interpretation of message: ", 2);
+    .then(classification => {
+      classification.environmentUUID = message.environmentUUID;
+      logExpression("Classification from classify message: ", 2);
+      logExpression(classification, 2);
+      return interpretMessage(classification);
+    })
+    .then(interpretation => {
+      logExpression("interpretation is: ", 2);
       logExpression(interpretation, 2);
-      let messageResponse = { // Start forming message, in case I want to send it
-        text: "",
-        speaker: agentName,
-        role: "seller",
-        addressee: speaker,
-        environmentUUID: interpretation.metadata.environmentUUID,
-        timeStamp: new Date()
-      };
-      if(addressee == agentName && interpretation.type == "AcceptOffer") { // Buyer accepted my offer! Deal with it.
-        logExpression("The buyer " + speaker + " accepted my offer.", 2);
-        logExpression(bidHistory, 2);
-        if(bidHistory[speaker] && bidHistory[speaker].length) { // I actually did make an offer to this buyer; fetch details and confirm acceptance
-          let bidHistoryIndividual = bidHistory[speaker].filter(bid =>
-            {return (bid.metadata.speaker == agentName && bid.type == "SellOffer");}
-          );
-          if (bidHistoryIndividual.length) {
-            logExpression(bidHistoryIndividual, 2);
-            let acceptedBid = bidHistoryIndividual[bidHistoryIndividual.length - 1];
-            logExpression(acceptedBid, 2);
-            bid = {
-              price: acceptedBid.price,
-              quantity: acceptedBid.quantity,
-              type: "Accept"
-            };
-            logExpression(bid, 2);
-            messageResponse.text = translateBid(bid, true);
-            messageResponse.bid = bid;
-            bidHistory[speaker] = null;
+      let speaker = interpretation.metadata.speaker;
+      let addressee = interpretation.metadata.addressee;
+      let message_speaker_role = interpretation.metadata.role;
+      if (speaker == agentName) { // The message was from me; this means that the system allowed it to go through.
+        logExpression("This message is from me! I'm not going to talk to myself.", 2);
+        // If the message from me was an accept or reject, wipe out the bidHistory with this particular negotiation partner
+        // Otherwise, add the message to the bid history with this negotiation partner
+        if (interpretation.type == 'AcceptOffer' || interpretation.type == 'RejectOffer') {
+          bidHistory[addressee] = null;
+        } else {
+          if (bidHistory[addressee]) {
+            bidHistory[addressee].push(interpretation);
           }
-          else { // Didn't have any outstanding offers with this buyer
+        }
+      } else if (message_speaker_role == "buyer") { // Message is from a buyer
+        logExpression("Interpretation of message: ", 2);
+        logExpression(interpretation, 2);
+        let messageResponse = { // Start forming message, in case I want to send it
+          text: "",
+          speaker: agentName,
+          role: "seller",
+          addressee: speaker,
+          environmentUUID: interpretation.metadata.environmentUUID,
+          timeStamp: new Date()
+        };
+        if (addressee == agentName && interpretation.type == "AcceptOffer") { // Buyer accepted my offer! Deal with it.
+          logExpression("The buyer " + speaker + " accepted my offer.", 2);
+          logExpression(bidHistory, 2);
+          if (bidHistory[speaker] && bidHistory[speaker].length) { // I actually did make an offer to this buyer; fetch details and confirm acceptance
+            let bidHistoryIndividual = bidHistory[speaker].filter(bid => {
+              return (bid.metadata.speaker == agentName && bid.type == "SellOffer");
+            });
+            if (bidHistoryIndividual.length) {
+              logExpression(bidHistoryIndividual, 2);
+              let acceptedBid = bidHistoryIndividual[bidHistoryIndividual.length - 1];
+              logExpression(acceptedBid, 2);
+              bid = {
+                price: acceptedBid.price,
+                quantity: acceptedBid.quantity,
+                type: "Accept"
+              };
+              logExpression(bid, 2);
+              messageResponse.text = translateBid(bid, true);
+              messageResponse.bid = bid;
+              bidHistory[speaker] = null;
+            } else { // Didn't have any outstanding offers with this buyer
+              messageResponse.text = "I'm sorry, but I'm not aware of any outstanding offers.";
+            }
+          } else { // Didn't have any outstanding offers with this buyer
             messageResponse.text = "I'm sorry, but I'm not aware of any outstanding offers.";
           }
-        }
-        else { // Didn't have any outstanding offers with this buyer
-          messageResponse.text = "I'm sorry, but I'm not aware of any outstanding offers.";
-        }
-        return messageResponse;
-      }
-      else if (addressee == agentName && interpretation.type == "RejectOffer") { // The buyer claims to be rejecting an offer I made; deal with it
-        logExpression("My offer was rejected!", 2);
-        logExpression(bidHistory, 2);
-        if(bidHistory[speaker] && bidHistory[speaker].length) { // Check whether I made an offer to this buyer
-          let bidHistoryIndividual = bidHistory[speaker].filter(bid =>
-            {return (bid.metadata.speaker == agentName && bid.type == "SellOffer");}
-          );
-          if (bidHistoryIndividual.length) {
-            messageResponse.text = "I'm sorry you rejected my bid. I hope we can do business in the near future.";
-            bidHistory[speaker] = null;
+          return messageResponse;
+        } else if (addressee == agentName && interpretation.type == "RejectOffer") { // The buyer claims to be rejecting an offer I made; deal with it
+          logExpression("My offer was rejected!", 2);
+          logExpression(bidHistory, 2);
+          if (bidHistory[speaker] && bidHistory[speaker].length) { // Check whether I made an offer to this buyer
+            let bidHistoryIndividual = bidHistory[speaker].filter(bid => {
+              return (bid.metadata.speaker == agentName && bid.type == "SellOffer");
+            });
+            if (bidHistoryIndividual.length) {
+              messageResponse.text = "I'm sorry you rejected my bid. I hope we can do business in the near future.";
+              bidHistory[speaker] = null;
+            } else {
+              messageResponse.text = "There must be some confusion; I'm not aware of any outstanding offers.";
+            }
+          } else {
+            messageResponse.text = "OK, but I didn't think we had any outstanding offers.";
           }
-          else {
-            messageResponse.text = "There must be some confusion; I'm not aware of any outstanding offers.";
-          }
-        }
-        else {
-          messageResponse.text = "OK, but I didn't think we had any outstanding offers.";
-        }
-        return messageResponse;
-      }
-      else if (addressee == agentName && interpretation.type == "Information") { // The buyer is just sending me an informational message. Reply politely without attempting to understand.
-        logExpression("This is an informational message.", 2);
-        let messageResponse = {
-          text: "OK. Thanks for letting me know.",
-          speaker: agentName,
-          role: "seller",
-          addressee: speaker,
-          environmentUUID: interpretation.metadata.environmentUUID,
-          timeStamp: new Date()
-        };
-        return messageResponse;
-      }
-      else if (addressee == agentName && interpretation.type == "NotUnderstood") { // The buyer said something, but we can't figure out what they meant. Just ignore them and hope they'll try again if it's important.
-        logExpression("I didn't understand this message; pretend it never happened.", 2);
-        let messageResponse = {
-          text: "Sorry, Could you rephrase that?",
-          speaker: agentName,
-          role: "seller",
-          addressee: speaker,
-          environmentUUID: interpretation.metadata.environmentUUID,
-          timeStamp: new Date()
-        };
-        return messageResponse;
-      }
-      else if(interpretation.type == "BuyOffer" ||
-               interpretation.type == "BuyRequest") { // The buyer is making an offer or a request
-        if(mayIRespond(message_speaker_role, addressee)) { // I'm going to let myself respond, as dictated by mayIRespond()
-
-          if(!bidHistory[speaker]) bidHistory[speaker] = [];
-          bidHistory[speaker].push(interpretation);
-
-          let bid = generateBid(interpretation); // Generate bid based on message interpretation, utility, and the current state of negotiation with the buyer
-          logExpression("Proposed bid is: ", 2);
-          logExpression(bid, 2);
-
-          let bidResponse = {
-            text: translateBid(bid, false), // Translate the bid into English
+          return messageResponse;
+        } else if (addressee == agentName && interpretation.type == "Information") { // The buyer is just sending me an informational message. Reply politely without attempting to understand.
+          logExpression("This is an informational message.", 2);
+          let messageResponse = {
+            text: "OK. Thanks for letting me know.",
             speaker: agentName,
             role: "seller",
             addressee: speaker,
             environmentUUID: interpretation.metadata.environmentUUID,
             timeStamp: new Date()
           };
-          bidResponse.bid = bid;
-
-          return bidResponse;
-        }
-        else { // Message was from a buyer, but I'm voluntarily opting not to respond, as dictated by mayIRespond()
-          logExpression("I'm choosing not to do respond to this buy offer or request.", 2);
-          logExpression(message, 2);
+          return messageResponse;
+        } else if (addressee == agentName && interpretation.type == "NotUnderstood") { // The buyer said something, but we can't figure out what they meant. Just ignore them and hope they'll try again if it's important.
+          logExpression("I didn't understand this message; pretend it never happened.", 2);
+          let messageResponse = {
+            text: "Sorry, Could you rephrase that?",
+            speaker: agentName,
+            role: "seller",
+            addressee: speaker,
+            environmentUUID: interpretation.metadata.environmentUUID,
+            timeStamp: new Date()
+          };
+          return messageResponse;
+        } else if (interpretation.type == "BuyOffer" || interpretation.type == "BuyRequest") { // The buyer is making an offer or a request
+          if (mayIRespond(message_speaker_role, addressee)) { // I'm going to let myself respond, as dictated by mayIRespond()
+            if (!bidHistory[speaker]) bidHistory[speaker] = [];
+            bidHistory[speaker].push(interpretation);
+            let bid = generateBid(interpretation); // Generate bid based on message interpretation, utility, and the current state of negotiation with the buyer
+            logExpression("Proposed bid is: ", 2);
+            logExpression(bid, 2);
+            let bidResponse = {
+              text: translateBid(bid, false), // Translate the bid into English
+              speaker: agentName,
+              role: "seller",
+              addressee: speaker,
+              environmentUUID: interpretation.metadata.environmentUUID,
+              timeStamp: new Date()
+            };
+            bidResponse.bid = bid;
+            return bidResponse;
+          } else { // Message was from a buyer, but I'm voluntarily opting not to respond, as dictated by mayIRespond()
+            logExpression("I'm choosing not to do respond to this buy offer or request.", 2);
+            logExpression(message, 2);
+            return Promise.resolve(null);
+          }
+        } else if (addressee == agentName && interpretation.type == "Quality") {
+          messageResponse.text = selectMessage(qualityMessages);
+          return messageResponse
+        } else if (addressee == agentName && interpretation.type == "HighPrice"){
+          let messageResponse = {
+            text: "I only offer the highest quality items, unfortunately this comes at a greater price. However, I do offer a discount of $1 USD for purchases greater than $5 USD.",
+            speaker: agentName,
+            role: "seller",
+            addressee: speaker,
+            environmentUUID: interpretation.metadata.environmentUUID,
+            timeStamp: new Date()
+          };
+          return messageResponse;
+        } else if (addressee == agentName && interpretation.type == "Help"){
+          let messageResponse = {
+            text: "Here are some things you can tell me:\n"+agentName+", I'd like to buy one egg.\n"+
+            agentName+", I'd like to buy 10 eggs for $7.\n"+agentName+", I accept your offer.\n"+agentName+", I reject your offer.\n"+
+            agentName+", what is for sale?\n"+agentName+", do you have better quality eggs?\n"+
+            agentName+", I notice your prices are very high.\n"+agentName+", I don't have enough money for that.",
+            speaker: agentName,
+            role: "seller",
+            addressee: speaker,
+            environmentUUID: interpretation.metadata.environmentUUID,
+            timeStamp: new Date()
+          };
+          return messageResponse;
+        } else if (addressee == agentName && interpretation.type == "WhatGoods"){
+          let messageResponse = {
+            text: "I have Eggs (unit: each), Milk (unit: cup), Sugar (unit: cup), Flour (unit: cup), Chocolate (unit: ounce), Vanilla (unit: teaspoon) and Blueberries (unit: pack) for sale.",
+            speaker: agentName,
+            role: "seller",
+            addressee: speaker,
+            environmentUUID: interpretation.metadata.environmentUUID,
+            timeStamp: new Date()
+          };
+          return messageResponse;
+        } /*else if (addressee == agentName && interpretation.type == "NegotiatePrice"){
+          discount = true;
+          let bidHistoryIndividual = bidHistory[speaker].filter(bid => {
+            return (bid.metadata.speaker == agentName && bid.type == "SellOffer");
+            let acceptedBid = bidHistoryIndividual[bidHistoryIndividual.length - 1];
+            bid = {
+              price: acceptedBid.price,
+              quantity: acceptedBid.quantity,
+              type: 'SellOffer'
+            };
+          });
+          bidHistory=[];
+          messageResponse.text = translateBid(bid, true);
+          messageResponse.bid = bid;
+          return messageResponse;
+        }*/ else { // None of the specific cases are satisfied; don't take any action
           return Promise.resolve(null);
         }
-      }else if (addressee == agentName && interpretation.type == "Quality"){
-        messageResponse.text = selectMessage(qualityMessages);
-        return messageResponse
-	  }
-      else { // None of the specific cases are satisfied; don't take any action
+      } else if (message_speaker_role == "seller") { // Message was from another seller. A more clever agent might be able to exploit this info somehow!
+        logExpression("The other seller, " + speaker + ", sent this message: ", 2);
+        logExpression(message, 2);
         return Promise.resolve(null);
       }
-    }
-    else if(message_speaker_role == "seller") { // Message was from another seller. A more clever agent might be able to exploit this info somehow!
-      logExpression("The other seller, " + speaker + ", sent this message: ", 2);
-      logExpression(message, 2);
+    })
+    .catch(error => {
+      logExpression("Encountered error in processMessage: ", 1);
+      logExpression(error, 1);
       return Promise.resolve(null);
-    }
-  })
-  .catch(error => {
-    logExpression("Encountered error in processMessage: ", 1);
-    logExpression(error, 1);
-    return Promise.resolve(null);
-  });
+    });
 }
 
 
@@ -717,30 +766,27 @@ function getSafe(p, o, d) {
 
 function translateBid(bid, confirm) {
   let text = "";
-  if(bid.type == 'SellOffer') {
-    if(bid.price.value > 5){
+  if (bid.type == 'SellOffer') {
+    if (bid.price.value > 5) {
       text += "Because your total is over 5 dollars I will offer a discount of 1 dollar. You will get";
       Object.keys(bid.quantity).forEach(good => {
         text += " " + bid.quantity[good] + " " + good;
       });
       const disval = bid.price.value - 1
       text += " for  the discounted price of " + disval + " " + bid.price.unit + ".";
-	}else {
+    } else {
       text = "How about if I sell you";
       Object.keys(bid.quantity).forEach(good => {
         text += " " + bid.quantity[good] + " " + good;
       });
       text += " for " + bid.price.value + " " + bid.price.unit + ".";
     }
-  }
-  else if(bid.type == 'Reject') {
+  } else if (bid.type == 'Reject') {
     text = selectMessage(rejectionMessages);
-  }
-  else if(bid.type == 'Accept') {
-    if(confirm) {
+  } else if (bid.type == 'Accept') {
+    if (confirm) {
       text = selectMessage(confirmAcceptanceMessages);
-    }
-    else {
+    } else {
       text = selectMessage(acceptanceMessages);
     }
     Object.keys(bid.quantity).forEach(good => {
@@ -778,7 +824,7 @@ function sendMessage(message) {
 
 function postDataToServiceType(json, serviceType, path) {
   let serviceMap = appSettings.serviceMap;
-  if(serviceMap[serviceType]) {
+  if (serviceMap[serviceType]) {
     let options = serviceMap[serviceType];
     options.path = path;
     let url = options2URL(options);
@@ -789,14 +835,14 @@ function postDataToServiceType(json, serviceType, path) {
       json: true
     };
     return request(rOptions)
-    .then(response => {
-      return response;
-    })
-    .catch(error => {
-      logExpression("Error: ", 1);
-      logExpression(error, 1);
-      return null;
-    });
+      .then(response => {
+        return response;
+      })
+      .catch(error => {
+        logExpression("Error: ", 1);
+        logExpression(error, 1);
+        return null;
+      });
   }
 }
 
@@ -808,6 +854,6 @@ function options2URL(options) {
   let protocol = options.protocol || 'http';
   let url = protocol + '://' + options.host;
   if (options.port) url += ':' + options.port;
-  if (options.path) url  += options.path;
+  if (options.path) url += options.path;
   return url;
 }
