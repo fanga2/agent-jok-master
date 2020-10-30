@@ -1,5 +1,5 @@
-[2020-10-28 03:27:53.26] Error: 
-[2020-10-28 03:27:53.26]
+[2020-10-28 11:56:48.61] Error: 
+[2020-10-28 11:56:48.61]
 {
   "name": "RequestError",
   "message": "Error: socket hang up",
@@ -13,20 +13,96 @@
     "method": "POST",
     "uri": "http://localhost:14010/relayMessage",
     "body": {
-      "text": "How about if I sell you 1 egg for 1.04 USD.",
+      "text": "Because your total is over 5 dollars I will offer a discount of 1 dollar. You will get 10 milk for  the discounted price of 4.5 USD.",
       "speaker": "Watson",
       "role": "seller",
       "addressee": "Human",
       "environmentUUID": "abcdefg",
-      "timeStamp": "2020-10-28T08:25:53.242Z",
+      "timeStamp": "2020-10-28T16:54:48.598Z",
       "bid": {
         "quantity": {
-          "egg": 1
+          "milk": 10
         },
         "type": "SellOffer",
         "price": {
           "unit": "USD",
-          "value": 1.04
+          "value": 5.5
+        }
+      }
+    },
+    "json": true,
+    "simple": true,
+    "resolveWithFullResponse": false,
+    "transform2xxOnly": false
+  }
+}
+[2020-10-28 12:15:18.91] Error: 
+[2020-10-28 12:15:18.91]
+{
+  "name": "RequestError",
+  "message": "Error: socket hang up",
+  "cause": {
+    "code": "ECONNRESET"
+  },
+  "error": {
+    "code": "ECONNRESET"
+  },
+  "options": {
+    "method": "POST",
+    "uri": "http://localhost:14010/relayMessage",
+    "body": {
+      "text": "How about if I sell you 2 sugar for 4.07 USD.",
+      "speaker": "Watson",
+      "role": "seller",
+      "addressee": "Human",
+      "environmentUUID": "abcdefg",
+      "timeStamp": "2020-10-28T17:13:18.903Z",
+      "bid": {
+        "quantity": {
+          "sugar": 2
+        },
+        "type": "SellOffer",
+        "price": {
+          "unit": "USD",
+          "value": 4.07
+        }
+      }
+    },
+    "json": true,
+    "simple": true,
+    "resolveWithFullResponse": false,
+    "transform2xxOnly": false
+  }
+}
+[2020-10-28 13:37:35.52] Error: 
+[2020-10-28 13:37:35.52]
+{
+  "name": "RequestError",
+  "message": "Error: socket hang up",
+  "cause": {
+    "code": "ECONNRESET"
+  },
+  "error": {
+    "code": "ECONNRESET"
+  },
+  "options": {
+    "method": "POST",
+    "uri": "http://localhost:14010/relayMessage",
+    "body": {
+      "text": "Because your total is over 5 dollars I will offer a discount of 1 dollar. You will get 10 milk for  the discounted price of 7.4399999999999995 USD.",
+      "speaker": "Watson",
+      "role": "seller",
+      "addressee": "Human",
+      "environmentUUID": "abcdefg",
+      "timeStamp": "2020-10-28T18:35:35.506Z",
+      "bid": {
+        "quantity": {
+          "milk": 10
+        },
+        "type": "SellOffer",
+        "price": {
+          "unit": "USD",
+          "value": 8.44
         }
       }
     },

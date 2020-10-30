@@ -678,10 +678,11 @@ function processMessage(message) {
           return messageResponse;
         } else if (addressee == agentName && interpretation.type == "Help"){
           let messageResponse = {
-            text: "Here are some things you can tell me:\n"+agentName+", I'd like to buy one egg.\n"+
+            text: "Here are some things you can tell me:\n"+agentName+", I'd like to buy two cups of milk.\n"+
             agentName+", I'd like to buy 10 eggs for $7.\n"+agentName+", I accept your offer.\n"+agentName+", I reject your offer.\n"+
-            agentName+", what is for sale?\n"+agentName+", do you have better quality eggs?\n"+
-            agentName+", I notice your prices are very high.\n"+agentName+", I don't have enough money for that.",
+            agentName+", what are you selling?\n"+agentName+", do you have the best milk?\n"+
+            agentName+", I notice your prices are very high.\n"+agentName+", how many eggs do you have in stock?\n"+
+            agentName+", where are your products from?"+agentName+", do you have any special deals?"+agentName+", how can I negotiate with you?",
             speaker: agentName,
             role: "seller",
             addressee: speaker,
@@ -699,7 +700,38 @@ function processMessage(message) {
             timeStamp: new Date()
           };
           return messageResponse;
-        } /*else if (addressee == agentName && interpretation.type == "NegotiatePrice"){
+        }  else if (addressee == agentName && interpretation.type == "Quantity"){
+          let numb = Math.floor(Math.random() * 151) + 100;
+          let messageResponse = {
+            text: "I have "+numb+" in stock.",
+            speaker: agentName,
+            role: "seller",
+            addressee: speaker,
+            environmentUUID: interpretation.metadata.environmentUUID,
+            timeStamp: new Date()
+          };
+          return messageResponse;
+        } else if (addressee == agentName && interpretation.type == "Where"){
+          let messageResponse = {
+            text: "All our goods are locally sourced, except for the vanilla and chocolate which are imported from Brazil.",
+            speaker: agentName,
+            role: "seller",
+            addressee: speaker,
+            environmentUUID: interpretation.metadata.environmentUUID,
+            timeStamp: new Date()
+          };
+          return messageResponse;
+        } else if (addressee == agentName && interpretation.type == "Discount"){
+          let messageResponse = {
+            text: "Currently we are offering a discount of $1 on any purchases over $5.",
+            speaker: agentName,
+            role: "seller",
+            addressee: speaker,
+            environmentUUID: interpretation.metadata.environmentUUID,
+            timeStamp: new Date()
+          };
+          return messageResponse;
+        }/*else if (addressee == agentName && interpretation.type == "NegotiatePrice"){
           discount = true;
           let bidHistoryIndividual = bidHistory[speaker].filter(bid => {
             return (bid.metadata.speaker == agentName && bid.type == "SellOffer");

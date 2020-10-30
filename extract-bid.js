@@ -81,6 +81,21 @@ function interpretMessage(watsonResponse) {
       type: "NegotiatePrice"
      };
   }
+  else if (intents[0].intent == "Quantity" && intents[0].confidence > 0.2) {
+    cmd = {
+      type: "Quantity"
+     };
+  }
+  else if (intents[0].intent == "Where" && intents[0].confidence > 0.2) {
+    cmd = {
+      type: "Where"
+     };
+  }
+  else if (intents[0].intent == "Discount" && intents[0].confidence > 0.2) {
+    cmd = {
+      type: "Discount"
+     };
+  }
   else {
     cmd = {
       type: "NotUnderstood"
