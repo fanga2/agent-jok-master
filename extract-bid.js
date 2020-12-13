@@ -1,5 +1,7 @@
 const {classifyMessage} = require('./conversation.js');
 const {setLogLevel, logExpression} = require('@cisl/zepto-logger');
+const {classifyImage} = require('./imageRecognition.js');
+const {interpretImage} = require('./extract-image.js');
 // logExpression is like console.log, but it also
 //   * outputs a timestamp
 //   * first argument takes text or JSON and handles it appropriately
