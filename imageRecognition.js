@@ -18,7 +18,7 @@ function classifyImage(input) {
   logExpression("Entered classifyImage with input: ", 2);
   logExpression(input, 2);
   let text = null;
-  text = input.replace(/[\t\r\n]+/g,"").trim();
+  text = input.replace(/[\s\t\r\n]+/g,"").trim();
   let classifyParams = {
   	url: input,
   	classifierIds: [assistantParams.classifierID],

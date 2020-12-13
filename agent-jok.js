@@ -663,7 +663,41 @@ function processMessage(message) {
             logExpression(message, 2);
             return Promise.resolve(null);
           }
-        } else if (addressee == agentName && interpretation.type == "Quality") {
+        } else if(interpretation.type == "ImageRequest") {
+          if(mayIRespond(message_speaker_role, addressee)) {
+            if (interpretation.quality == null){
+              let bidResponse = {
+                text: "We could not recognize that image, sorry",
+                speaker: agentName,
+                role: "seller",
+                addressee: speaker,
+                environmentUUID: interpretation.metadata.environmentUUID,
+                timeStamp: new Date()
+              };
+              return bidResponse;
+            }else{
+              if (!bidHistory[speaker]) bidHistory[speaker] = [];
+              bidHistory[speaker].push(interpretation);
+              let bid = generateBid(interpretation);
+              logExpression("Proposed bid is: ", 2);
+              logExpression(bid, 2);
+              let bidResponse = {
+                text: translateBid(bid, false),
+                speaker:agentName,
+                role: "seller",
+                addressee: speaker,
+                environmentUUID: interpretation.metadata.environmentUUID,
+                timeStamp: new Date()
+              };
+              bidResponse.bid = bid;
+              return bidResponse;
+            }
+          }else{
+            logExpression("I'm choosing not to do respond to this buy offer or request.", 2);
+            logExpression(message, 2);
+            return Promise.resolve(null);
+          }
+        }else if (addressee == agentName && interpretation.type == "Quality") {
           messageResponse.text = selectMessage(qualityMessages);
           return messageResponse
         } else if (addressee == agentName && interpretation.type == "HighPrice"){

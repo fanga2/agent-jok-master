@@ -95,8 +95,13 @@ function interpretMessage(watsonResponse) {
     cmd = {
       type: "Discount"
      };
-  }
-  else {
+  }else if (intents[0].intent == "ImageRequest" && intents[0].confidence > 0.2){
+  	let extractedImage = extractOfferFromImage(entities);
+  	cmd = {
+  	  quantity: extractedImage.quantity,
+  	  type: "ImageRequest"
+  	}
+  }else {
     cmd = {
       type: "NotUnderstood"
     };
@@ -205,6 +210,41 @@ function extractBidFromMessage(message) {
     };
     return extractedBid;
   });
+}
+
+function extractOfferFromImage(entities){
+  let entities = JSON.parse(JSON.stringify(entityList));
+  let quantity = null;
+  entities.some(eBlock => {
+  	if(eBlock.entity == "url") {
+  	  classifiedImage = classifyImage(eBlock.value);
+  	  interpretation = interpretImage(classifiedImage);
+  	  if(interpretation.type == "cake"){
+  	  	logExpression("The image was interpreted as a cake", 2)
+  	  	quantity = {
+  	  	  "flour": 1.5,
+  	  	  "vanilla": 3.0,
+  	  	  "sugar": 1.5,
+  	  	  "egg": 3.0,
+  	  	  "chocolate" 4.0
+  	  	}
+  	  }else if(interpretation.type == "pancake"){
+  	  	logExpression("The image was interpreted as a pancake", 2)
+  	  	quantity = {
+  	  	  "flour": 1.5,
+  	  	  "sugar": 3.0,
+  	  	  "milk": 1.25,
+  	  	  "egg": 1.0
+  	  	}
+  	  }else{
+  	  	logExpression("The image was not recognized", 2)
+  	  }
+  	  return true;
+  	}
+  });
+  return {
+  	quantity
+  };
 }
 
 
