@@ -1,114 +1,1546 @@
-[2020-10-28 11:56:48.61] Error: 
-[2020-10-28 11:56:48.61]
+[2020-12-14 19:16:19.71] In interpretMessage, watsonResponse is: 
+[2020-12-14 19:16:19.71]
 {
-  "name": "RequestError",
-  "message": "Error: socket hang up",
-  "cause": {
-    "code": "ECONNRESET"
-  },
-  "error": {
-    "code": "ECONNRESET"
-  },
-  "options": {
-    "method": "POST",
-    "uri": "http://localhost:14010/relayMessage",
-    "body": {
-      "text": "Because your total is over 5 dollars I will offer a discount of 1 dollar. You will get 10 milk for  the discounted price of 4.5 USD.",
-      "speaker": "Watson",
-      "role": "seller",
-      "addressee": "Human",
-      "environmentUUID": "abcdefg",
-      "timeStamp": "2020-10-28T16:54:48.598Z",
-      "bid": {
-        "quantity": {
-          "milk": 10
+  "intents": [
+    {
+      "intent": "ImageRequest",
+      "confidence": 0.9310810089111328
+    },
+    {
+      "intent": "HighPrice",
+      "confidence": 0.23330858945846558
+    },
+    {
+      "intent": "Quality",
+      "confidence": 0.23036983609199524
+    },
+    {
+      "intent": "Help",
+      "confidence": 0.21667640209198
+    },
+    {
+      "intent": "Information",
+      "confidence": 0.21628247052431107
+    },
+    {
+      "intent": "Where",
+      "confidence": 0.21535824686288835
+    },
+    {
+      "intent": "NegotiatePrice",
+      "confidence": 0.21387888491153717
+    },
+    {
+      "intent": "AcceptOffer",
+      "confidence": 0.21304451525211335
+    },
+    {
+      "intent": "RejectOffer",
+      "confidence": 0.21214929893612863
+    },
+    {
+      "intent": "Discount",
+      "confidence": 0.2116444192826748
+    }
+  ],
+  "entities": [
+    {
+      "entity": "url",
+      "location": [
+        34,
+        156
+      ],
+      "groups": [
+        {
+          "group": "group_0",
+          "location": [
+            34,
+            156
+          ]
         },
-        "type": "SellOffer",
-        "price": {
-          "unit": "USD",
-          "value": 5.5
+        {
+          "group": "group_1",
+          "location": [
+            34,
+            156
+          ]
+        },
+        {
+          "group": "group_2"
+        },
+        {
+          "group": "group_3"
+        },
+        {
+          "group": "group_4"
+        },
+        {
+          "group": "group_5"
         }
+      ],
+      "value": "url",
+      "confidence": 1
+    },
+    {
+      "entity": "sys-number",
+      "location": [
+        122,
+        129
+      ],
+      "value": "2020",
+      "confidence": 1,
+      "metadata": {
+        "numeric_value": 2020
+      },
+      "interpretation": {
+        "numeric_value": 2020,
+        "range_link": "number_range_122_129"
+      },
+      "role": {
+        "type": "number_from",
+        "confidence": 1
       }
     },
-    "json": true,
-    "simple": true,
-    "resolveWithFullResponse": false,
-    "transform2xxOnly": false
+    {
+      "entity": "sys-number",
+      "location": [
+        122,
+        129
+      ],
+      "value": "8",
+      "confidence": 1,
+      "metadata": {
+        "numeric_value": 8
+      },
+      "interpretation": {
+        "numeric_value": 8,
+        "range_link": "number_range_122_129"
+      },
+      "role": {
+        "type": "number_to",
+        "confidence": 1
+      }
+    }
+  ],
+  "generic": [
+    {
+      "response_type": "text",
+      "text": "https://www.rachaelrayshow.com/sites/default/files/styles/video_1920x1080/public/images/2020-08/pancakes.jpg?itok=_b20Usqy"
+    }
+  ],
+  "input": {
+    "speaker": "Human",
+    "addressee": "",
+    "text": "Can I get the item in this image: https://www.rachaelrayshow.com/sites/default/files/styles/video_1920x1080/public/images/2020-08/pancakes.jpg?itok=_b20Usqy",
+    "role": "buyer",
+    "environmentUUID": "abcdefg",
+    "timestamp": 1607991378264,
+    "roundId": 0
+  },
+  "addressee": "",
+  "speaker": "Human",
+  "environmentUUID": "abcdefg"
+}
+[2020-12-14 19:16:19.71] https://www.rachaelrayshow.com/sites/default/files/styles/video_1920x1080/public/images/2020-08/pancakes.jpg?itok=_b20Usqy
+[2020-12-14 19:16:19.71] Entered classifyImage with input: 
+[2020-12-14 19:16:19.71] https://www.rachaelrayshow.com/sites/default/files/styles/video_1920x1080/public/images/2020-08/pancakes.jpg?itok=_b20Usqy
+[2020-12-14 19:16:19.71] classifyParams: 
+[2020-12-14 19:16:19.71]
+{
+  "url": "https://www.rachaelrayshow.com/sites/default/files/styles/video_1920x1080/public/images/2020-08/pancakes.jpg?itok=_b20Usqy",
+  "classifierIds": [
+    "DefaultCustomModel_1759596825"
+  ],
+  "threshold": 0
+}
+[2020-12-14 19:16:21.69] In interpretMessage, watsonResponse is: 
+[2020-12-14 19:16:21.69]
+{
+  "intents": [
+    {
+      "intent": "Offer",
+      "confidence": 0.6479006290435791
+    },
+    {
+      "intent": "AcceptOffer",
+      "confidence": 0.2456189185380936
+    },
+    {
+      "intent": "Quantity",
+      "confidence": 0.24468829035758974
+    },
+    {
+      "intent": "Discount",
+      "confidence": 0.23175581991672517
+    },
+    {
+      "intent": "Information",
+      "confidence": 0.22611639201641084
+    },
+    {
+      "intent": "NegotiatePrice",
+      "confidence": 0.22391215264797212
+    },
+    {
+      "intent": "HighPrice",
+      "confidence": 0.21910708844661714
+    },
+    {
+      "intent": "Quality",
+      "confidence": 0.2135803207755089
+    },
+    {
+      "intent": "ImageRequest",
+      "confidence": 0.21310182362794877
+    },
+    {
+      "intent": "Where",
+      "confidence": 0.20651881769299507
+    }
+  ],
+  "entities": [
+    {
+      "entity": "sys-currency",
+      "location": [
+        27,
+        36
+      ],
+      "value": "5",
+      "confidence": 1,
+      "metadata": {
+        "numeric_value": 5,
+        "unit": "USD"
+      },
+      "interpretation": {
+        "numeric_value": 5,
+        "unit": "USD"
+      }
+    },
+    {
+      "entity": "sys-currency",
+      "location": [
+        64,
+        72
+      ],
+      "value": "1",
+      "confidence": 1,
+      "metadata": {
+        "numeric_value": 1,
+        "unit": "USD"
+      },
+      "interpretation": {
+        "numeric_value": 1,
+        "unit": "USD"
+      }
+    },
+    {
+      "entity": "sys-number",
+      "location": [
+        87,
+        90
+      ],
+      "value": "1.5",
+      "confidence": 1,
+      "metadata": {
+        "numeric_value": 1.5
+      },
+      "interpretation": {
+        "numeric_value": 1.5,
+        "subtype": "rational"
+      }
+    },
+    {
+      "entity": "good",
+      "location": [
+        91,
+        96
+      ],
+      "value": "flour",
+      "confidence": 1
+    },
+    {
+      "entity": "sys-number",
+      "location": [
+        97,
+        98
+      ],
+      "value": "3",
+      "confidence": 1,
+      "metadata": {
+        "numeric_value": 3
+      },
+      "interpretation": {
+        "numeric_value": 3,
+        "subtype": "integer"
+      }
+    },
+    {
+      "entity": "good",
+      "location": [
+        99,
+        104
+      ],
+      "value": "sugar",
+      "confidence": 1
+    },
+    {
+      "entity": "sys-number",
+      "location": [
+        105,
+        109
+      ],
+      "value": "1.25",
+      "confidence": 1,
+      "metadata": {
+        "numeric_value": 1.25
+      },
+      "interpretation": {
+        "numeric_value": 1.25,
+        "subtype": "rational"
+      }
+    },
+    {
+      "entity": "good",
+      "location": [
+        110,
+        114
+      ],
+      "value": "milk",
+      "confidence": 1
+    },
+    {
+      "entity": "sys-number",
+      "location": [
+        115,
+        116
+      ],
+      "value": "1",
+      "confidence": 1,
+      "metadata": {
+        "numeric_value": 1
+      },
+      "interpretation": {
+        "numeric_value": 1,
+        "subtype": "integer"
+      }
+    },
+    {
+      "entity": "good",
+      "location": [
+        117,
+        120
+      ],
+      "value": "egg",
+      "confidence": 1
+    },
+    {
+      "entity": "sys-currency",
+      "location": [
+        150,
+        171
+      ],
+      "value": "7.529999999999999",
+      "confidence": 1,
+      "metadata": {
+        "numeric_value": 7.529999999999999,
+        "unit": "USD"
+      },
+      "interpretation": {
+        "numeric_value": 7.529999999999999,
+        "unit": "USD"
+      }
+    }
+  ],
+  "generic": [
+    {
+      "response_type": "text",
+      "text": "I didn't understand. You can try rephrasing."
+    }
+  ],
+  "input": {
+    "text": "Because your total is over 5 dollars I will offer a discount of 1 dollar. You will get 1.5 flour 3 sugar 1.25 milk 1 egg for  the discounted price of 7.529999999999999 USD.",
+    "speaker": "Celia",
+    "role": "seller",
+    "addressee": "Human",
+    "environmentUUID": "abcdefg",
+    "timeStamp": "2020-12-15T00:16:21.303Z",
+    "roundId": 0
+  },
+  "addressee": "Human",
+  "speaker": "Celia",
+  "environmentUUID": "abcdefg"
+}
+[2020-12-14 19:16:21.69] Returning from interpretMessage with cmd: 
+[2020-12-14 19:16:21.69]
+{
+  "quantity": {
+    "flour": 1.5,
+    "sugar": 3,
+    "milk": 1.25,
+    "egg": 1
+  },
+  "price": {
+    "value": 7.529999999999999,
+    "unit": "USD"
+  },
+  "type": "SellOffer",
+  "metadata": {
+    "text": "Because your total is over 5 dollars I will offer a discount of 1 dollar. You will get 1.5 flour 3 sugar 1.25 milk 1 egg for  the discounted price of 7.529999999999999 USD.",
+    "speaker": "Celia",
+    "role": "seller",
+    "addressee": "Human",
+    "environmentUUID": "abcdefg",
+    "timeStamp": "2020-12-15T00:16:21.699Z",
+    "roundId": 0
   }
 }
-[2020-10-28 12:15:18.91] Error: 
-[2020-10-28 12:15:18.91]
+[2020-12-14 19:16:23.86]
 {
-  "name": "RequestError",
-  "message": "Error: socket hang up",
-  "cause": {
-    "code": "ECONNRESET"
-  },
-  "error": {
-    "code": "ECONNRESET"
-  },
-  "options": {
-    "method": "POST",
-    "uri": "http://localhost:14010/relayMessage",
-    "body": {
-      "text": "How about if I sell you 2 sugar for 4.07 USD.",
-      "speaker": "Watson",
-      "role": "seller",
-      "addressee": "Human",
-      "environmentUUID": "abcdefg",
-      "timeStamp": "2020-10-28T17:13:18.903Z",
-      "bid": {
-        "quantity": {
-          "sugar": 2
-        },
-        "type": "SellOffer",
-        "price": {
-          "unit": "USD",
-          "value": 4.07
-        }
-      }
+  "classifier_id": "DefaultCustomModel_1759596825",
+  "name": "Default Custom Model",
+  "classes": [
+    {
+      "class": "cake",
+      "score": 0.001
     },
-    "json": true,
-    "simple": true,
-    "resolveWithFullResponse": false,
-    "transform2xxOnly": false
+    {
+      "class": "pancake",
+      "score": 0.92
+    }
+  ]
+}
+[2020-12-14 19:16:23.86]
+{
+  "classifier_id": "DefaultCustomModel_1759596825",
+  "name": "Default Custom Model",
+  "classes": [
+    {
+      "class": "cake",
+      "score": 0.001
+    },
+    {
+      "class": "pancake",
+      "score": 0.92
+    }
+  ]
+}
+[2020-12-14 19:16:23.86] In interpretImage, watsonResponse is: 
+[2020-12-14 19:16:23.86]
+{
+  "classifier_id": "DefaultCustomModel_1759596825",
+  "name": "Default Custom Model",
+  "classes": [
+    {
+      "class": "cake",
+      "score": 0.001
+    },
+    {
+      "class": "pancake",
+      "score": 0.92
+    }
+  ]
+}
+[2020-12-14 19:16:23.86] Returning from interpretImage with cmd: 
+[2020-12-14 19:16:23.86]
+{
+  "type": "pancake"
+}
+[2020-12-14 19:16:23.86] The image was interpreted as a pancake
+[2020-12-14 19:16:23.86] Returning from interpretMessage with cmd: 
+[2020-12-14 19:16:23.86]
+{
+  "quantity": {
+    "flour": 1.5,
+    "sugar": 3,
+    "milk": 1.25,
+    "egg": 1
+  },
+  "type": "ImageRequest",
+  "metadata": {
+    "speaker": "Human",
+    "text": "Can I get the item in this image: https://www.rachaelrayshow.com/sites/default/files/styles/video_1920x1080/public/images/2020-08/pancakes.jpg?itok=_b20Usqy",
+    "role": "buyer",
+    "environmentUUID": "abcdefg",
+    "timestamp": 1607991378264,
+    "roundId": 0,
+    "timeStamp": "2020-12-15T00:16:23.866Z"
   }
 }
-[2020-10-28 13:37:35.52] Error: 
-[2020-10-28 13:37:35.52]
+[2020-12-14 19:16:23.86] Proposed bid is: 
+[2020-12-14 19:16:23.86]
 {
-  "name": "RequestError",
-  "message": "Error: socket hang up",
-  "cause": {
-    "code": "ECONNRESET"
+  "quantity": {
+    "flour": 1.5,
+    "sugar": 3,
+    "milk": 1.25,
+    "egg": 1
   },
-  "error": {
-    "code": "ECONNRESET"
-  },
-  "options": {
-    "method": "POST",
-    "uri": "http://localhost:14010/relayMessage",
-    "body": {
-      "text": "Because your total is over 5 dollars I will offer a discount of 1 dollar. You will get 10 milk for  the discounted price of 7.4399999999999995 USD.",
-      "speaker": "Watson",
-      "role": "seller",
-      "addressee": "Human",
-      "environmentUUID": "abcdefg",
-      "timeStamp": "2020-10-28T18:35:35.506Z",
-      "bid": {
-        "quantity": {
-          "milk": 10
-        },
-        "type": "SellOffer",
-        "price": {
-          "unit": "USD",
-          "value": 8.44
-        }
+  "type": "SellOffer",
+  "price": {
+    "unit": "USD",
+    "value": 10.12
+  }
+}[[2020-12-14 19:16:24.31] In interpretMessage, watsonResponse is: 
+[2020-12-14 19:16:24.31]
+{
+  "intents": [
+    {
+      "intent": "Offer",
+      "confidence": 0.649394416809082
+    },
+    {
+      "intent": "AcceptOffer",
+      "confidence": 0.2431833863258362
+    },
+    {
+      "intent": "Quantity",
+      "confidence": 0.24131956696510315
+    },
+    {
+      "intent": "Discount",
+      "confidence": 0.23093326687812807
+    },
+    {
+      "intent": "Information",
+      "confidence": 0.22545593380928042
+    },
+    {
+      "intent": "NegotiatePrice",
+      "confidence": 0.22430361807346344
+    },
+    {
+      "intent": "HighPrice",
+      "confidence": 0.21814105212688448
+    },
+    {
+      "intent": "ImageRequest",
+      "confidence": 0.2131529077887535
+    },
+    {
+      "intent": "Quality",
+      "confidence": 0.21302839666604997
+    },
+    {
+      "intent": "Where",
+      "confidence": 0.20648838728666308
+    }
+  ],
+  "entities": [
+    {
+      "entity": "sys-currency",
+      "location": [
+        27,
+        36
+      ],
+      "value": "5",
+      "confidence": 1,
+      "metadata": {
+        "numeric_value": 5,
+        "unit": "USD"
+      },
+      "interpretation": {
+        "numeric_value": 5,
+        "unit": "USD"
       }
     },
-    "json": true,
-    "simple": true,
-    "resolveWithFullResponse": false,
-    "transform2xxOnly": false
+    {
+      "entity": "sys-currency",
+      "location": [
+        64,
+        72
+      ],
+      "value": "1",
+      "confidence": 1,
+      "metadata": {
+        "numeric_value": 1,
+        "unit": "USD"
+      },
+      "interpretation": {
+        "numeric_value": 1,
+        "unit": "USD"
+      }
+    },
+    {
+      "entity": "sys-number",
+      "location": [
+        87,
+        90
+      ],
+      "value": "1.5",
+      "confidence": 1,
+      "metadata": {
+        "numeric_value": 1.5
+      },
+      "interpretation": {
+        "numeric_value": 1.5,
+        "subtype": "rational"
+      }
+    },
+    {
+      "entity": "good",
+      "location": [
+        91,
+        96
+      ],
+      "value": "flour",
+      "confidence": 1
+    },
+    {
+      "entity": "sys-number",
+      "location": [
+        97,
+        98
+      ],
+      "value": "3",
+      "confidence": 1,
+      "metadata": {
+        "numeric_value": 3
+      },
+      "interpretation": {
+        "numeric_value": 3,
+        "subtype": "integer"
+      }
+    },
+    {
+      "entity": "good",
+      "location": [
+        99,
+        104
+      ],
+      "value": "sugar",
+      "confidence": 1
+    },
+    {
+      "entity": "sys-number",
+      "location": [
+        105,
+        109
+      ],
+      "value": "1.25",
+      "confidence": 1,
+      "metadata": {
+        "numeric_value": 1.25
+      },
+      "interpretation": {
+        "numeric_value": 1.25,
+        "subtype": "rational"
+      }
+    },
+    {
+      "entity": "good",
+      "location": [
+        110,
+        114
+      ],
+      "value": "milk",
+      "confidence": 1
+    },
+    {
+      "entity": "sys-number",
+      "location": [
+        115,
+        116
+      ],
+      "value": "1",
+      "confidence": 1,
+      "metadata": {
+        "numeric_value": 1
+      },
+      "interpretation": {
+        "numeric_value": 1,
+        "subtype": "integer"
+      }
+    },
+    {
+      "entity": "good",
+      "location": [
+        117,
+        120
+      ],
+      "value": "egg",
+      "confidence": 1
+    },
+    {
+      "entity": "sys-currency",
+      "location": [
+        150,
+        158
+      ],
+      "value": "9.12",
+      "confidence": 1,
+      "metadata": {
+        "numeric_value": 9.12,
+        "unit": "USD"
+      },
+      "interpretation": {
+        "numeric_value": 9.12,
+        "unit": "USD"
+      }
+    }
+  ],
+  "generic": [
+    {
+      "response_type": "text",
+      "text": "Can you reword your statement? I'm not understanding."
+    }
+  ],
+  "input": {
+    "text": "Because your total is over 5 dollars I will offer a discount of 1 dollar. You will get 1.5 flour 3 sugar 1.25 milk 1 egg for  the discounted price of 9.12 USD.",
+    "speaker": "Watson",
+    "role": "seller",
+    "addressee": "Human",
+    "environmentUUID": "abcdefg",
+    "timeStamp": "2020-12-15T00:16:23.868Z",
+    "roundId": 0
+  },
+  "addressee": "Human",
+  "speaker": "Watson",
+  "environmentUUID": "abcdefg"
+}
+[2020-12-14 19:16:24.31] Returning from interpretMessage with cmd: 
+[2020-12-14 19:16:24.31]
+{
+  "quantity": {
+    "flour": 1.5,
+    "sugar": 3,
+    "milk": 1.25,
+    "egg": 1
+  },
+  "price": {
+    "value": 9.12,
+    "unit": "USD"
+  },
+  "type": "SellOffer",
+  "metadata": {
+    "text": "Because your total is over 5 dollars I will offer a discount of 1 dollar. You will get 1.5 flour 3 sugar 1.25 milk 1 egg for  the discounted price of 9.12 USD.",
+    "speaker": "Watson",
+    "role": "seller",
+    "addressee": "Human",
+    "environmentUUID": "abcdefg",
+    "timeStamp": "2020-12-15T00:16:24.311Z",
+    "roundId": 0
+  }
+}[2020-12-14 19:18:41.07] In interpretMessage, watsonResponse is: 
+[2020-12-14 19:18:41.07]
+{
+  "intents": [
+    {
+      "intent": "ImageRequest",
+      "confidence": 1
+    },
+    {
+      "intent": "AcceptOffer",
+      "confidence": 0
+    },
+    {
+      "intent": "Discount",
+      "confidence": 0
+    },
+    {
+      "intent": "Help",
+      "confidence": 0
+    },
+    {
+      "intent": "HighPrice",
+      "confidence": 0
+    },
+    {
+      "intent": "Information",
+      "confidence": 0
+    },
+    {
+      "intent": "NegotiatePrice",
+      "confidence": 0
+    },
+    {
+      "intent": "Offer",
+      "confidence": 0
+    },
+    {
+      "intent": "Quality",
+      "confidence": 0
+    },
+    {
+      "intent": "Quantity",
+      "confidence": 0
+    }
+  ],
+  "entities": [
+    {
+      "entity": "url",
+      "location": [
+        34,
+        151
+      ],
+      "groups": [
+        {
+          "group": "group_0",
+          "location": [
+            34,
+            151
+          ]
+        },
+        {
+          "group": "group_1",
+          "location": [
+            34,
+            151
+          ]
+        },
+        {
+          "group": "group_2"
+        },
+        {
+          "group": "group_3"
+        },
+        {
+          "group": "group_4"
+        },
+        {
+          "group": "group_5"
+        }
+      ],
+      "value": "url",
+      "confidence": 1
+    },
+    {
+      "entity": "sys-number",
+      "location": [
+        96,
+        98
+      ],
+      "value": "16",
+      "confidence": 1,
+      "metadata": {
+        "numeric_value": 16
+      },
+      "interpretation": {
+        "numeric_value": 16,
+        "subtype": "integer"
+      }
+    },
+    {
+      "entity": "sys-number",
+      "location": [
+        99,
+        100
+      ],
+      "value": "9",
+      "confidence": 1,
+      "metadata": {
+        "numeric_value": 9
+      },
+      "interpretation": {
+        "numeric_value": 9,
+        "subtype": "integer"
+      }
+    },
+    {
+      "entity": "sys-number",
+      "location": [
+        118,
+        122
+      ],
+      "value": "1017",
+      "confidence": 1,
+      "metadata": {
+        "numeric_value": 1017
+      },
+      "interpretation": {
+        "numeric_value": 1017,
+        "subtype": "integer"
+      }
+    },
+    {
+      "entity": "url",
+      "location": [
+        143,
+        151
+      ],
+      "groups": [
+        {
+          "group": "group_0",
+          "location": [
+            143,
+            151
+          ]
+        },
+        {
+          "group": "group_1"
+        },
+        {
+          "group": "group_2",
+          "location": [
+            143,
+            147
+          ]
+        },
+        {
+          "group": "group_3",
+          "location": [
+            148,
+            151
+          ]
+        },
+        {
+          "group": "group_4"
+        }
+      ],
+      "value": "url",
+      "confidence": 1
+    }
+  ],
+  "generic": [
+    {
+      "response_type": "text",
+      "text": "https://assets.bonappetit.com/photos/59c924dc32e4b84f5a9e437a/16:9/w_2560%2Cc_limit/1017%252520WEB%252520WEEK1060.jpg"
+    }
+  ],
+  "input": {
+    "speaker": "Human",
+    "addressee": "",
+    "text": "Can I get the item in this image: https://assets.bonappetit.com/photos/59c924dc32e4b84f5a9e437a/16:9/w_2560%2Cc_limit/1017%252520WEB%252520WEEK1060.jpg",
+    "role": "buyer",
+    "environmentUUID": "abcdefg",
+    "timestamp": 1607991520341,
+    "roundId": 0
+  },
+  "addressee": "",
+  "speaker": "Human",
+  "environmentUUID": "abcdefg"
+}
+[2020-12-14 19:18:41.07] https://assets.bonappetit.com/photos/59c924dc32e4b84f5a9e437a/16:9/w_2560%2Cc_limit/1017%252520WEB%252520WEEK1060.jpg
+[2020-12-14 19:18:41.07] Entered classifyImage with input: 
+[2020-12-14 19:18:41.07] https://assets.bonappetit.com/photos/59c924dc32e4b84f5a9e437a/16:9/w_2560%2Cc_limit/1017%252520WEB%252520WEEK1060.jpg
+[2020-12-14 19:18:41.07] classifyParams: 
+[2020-12-14 19:18:41.07]
+{
+  "url": "https://assets.bonappetit.com/photos/59c924dc32e4b84f5a9e437a/16:9/w_2560%2Cc_limit/1017%252520WEB%252520WEEK1060.jpg",
+  "classifierIds": [
+    "DefaultCustomModel_1759596825"
+  ],
+  "threshold": 0
+}
+[[2020-12-14 19:18:42.52] In interpretMessage, watsonResponse is: 
+[2020-12-14 19:18:42.52]
+{
+  "intents": [
+    {
+      "intent": "Offer",
+      "confidence": 0.6308893680572509
+    },
+    {
+      "intent": "Quantity",
+      "confidence": 0.24582529067993164
+    },
+    {
+      "intent": "AcceptOffer",
+      "confidence": 0.23777480125427247
+    },
+    {
+      "intent": "Discount",
+      "confidence": 0.22989688217639925
+    },
+    {
+      "intent": "Information",
+      "confidence": 0.226158007979393
+    },
+    {
+      "intent": "NegotiatePrice",
+      "confidence": 0.22104488909244538
+    },
+    {
+      "intent": "HighPrice",
+      "confidence": 0.21835849285125733
+    },
+    {
+      "intent": "Quality",
+      "confidence": 0.214070600271225
+    },
+    {
+      "intent": "ImageRequest",
+      "confidence": 0.21280740201473236
+    },
+    {
+      "intent": "Where",
+      "confidence": 0.20621185488998892
+    }
+  ],
+  "entities": [
+    {
+      "entity": "sys-currency",
+      "location": [
+        27,
+        36
+      ],
+      "value": "5",
+      "confidence": 1,
+      "metadata": {
+        "numeric_value": 5,
+        "unit": "USD"
+      },
+      "interpretation": {
+        "numeric_value": 5,
+        "unit": "USD"
+      }
+    },
+    {
+      "entity": "sys-currency",
+      "location": [
+        64,
+        72
+      ],
+      "value": "1",
+      "confidence": 1,
+      "metadata": {
+        "numeric_value": 1,
+        "unit": "USD"
+      },
+      "interpretation": {
+        "numeric_value": 1,
+        "unit": "USD"
+      }
+    },
+    {
+      "entity": "sys-number",
+      "location": [
+        87,
+        90
+      ],
+      "value": "1.5",
+      "confidence": 1,
+      "metadata": {
+        "numeric_value": 1.5
+      },
+      "interpretation": {
+        "numeric_value": 1.5,
+        "subtype": "rational"
+      }
+    },
+    {
+      "entity": "good",
+      "location": [
+        91,
+        96
+      ],
+      "value": "flour",
+      "confidence": 1
+    },
+    {
+      "entity": "sys-number",
+      "location": [
+        97,
+        98
+      ],
+      "value": "3",
+      "confidence": 1,
+      "metadata": {
+        "numeric_value": 3
+      },
+      "interpretation": {
+        "numeric_value": 3,
+        "subtype": "integer"
+      }
+    },
+    {
+      "entity": "good",
+      "location": [
+        99,
+        106
+      ],
+      "value": "vanilla",
+      "confidence": 1
+    },
+    {
+      "entity": "sys-number",
+      "location": [
+        107,
+        110
+      ],
+      "value": "1.5",
+      "confidence": 1,
+      "metadata": {
+        "numeric_value": 1.5
+      },
+      "interpretation": {
+        "numeric_value": 1.5,
+        "subtype": "rational"
+      }
+    },
+    {
+      "entity": "good",
+      "location": [
+        111,
+        116
+      ],
+      "value": "sugar",
+      "confidence": 1
+    },
+    {
+      "entity": "sys-number",
+      "location": [
+        117,
+        118
+      ],
+      "value": "3",
+      "confidence": 1,
+      "metadata": {
+        "numeric_value": 3
+      },
+      "interpretation": {
+        "numeric_value": 3,
+        "subtype": "integer"
+      }
+    },
+    {
+      "entity": "good",
+      "location": [
+        119,
+        122
+      ],
+      "value": "egg",
+      "confidence": 1
+    },
+    {
+      "entity": "sys-number",
+      "location": [
+        123,
+        124
+      ],
+      "value": "4",
+      "confidence": 1,
+      "metadata": {
+        "numeric_value": 4
+      },
+      "interpretation": {
+        "numeric_value": 4,
+        "subtype": "integer"
+      }
+    },
+    {
+      "entity": "good",
+      "location": [
+        125,
+        134
+      ],
+      "value": "chocolate",
+      "confidence": 1
+    },
+    {
+      "entity": "sys-currency",
+      "location": [
+        164,
+        173
+      ],
+      "value": "12.92",
+      "confidence": 1,
+      "metadata": {
+        "numeric_value": 12.92,
+        "unit": "USD"
+      },
+      "interpretation": {
+        "numeric_value": 12.92,
+        "unit": "USD"
+      }
+    }
+  ],
+  "generic": [
+    {
+      "response_type": "text",
+      "text": "I didn't get your meaning."
+    }
+  ],
+  "input": {
+    "text": "Because your total is over 5 dollars I will offer a discount of 1 dollar. You will get 1.5 flour 3 vanilla 1.5 sugar 3 egg 4 chocolate for  the discounted price of 12.92 USD.",
+    "speaker": "Celia",
+    "role": "seller",
+    "addressee": "Human",
+    "environmentUUID": "abcdefg",
+    "timeStamp": "2020-12-15T00:18:42.149Z",
+    "roundId": 0
+  },
+  "addressee": "Human",
+  "speaker": "Celia",
+  "environmentUUID": "abcdefg"
+}
+[2020-12-14 19:18:42.52] Returning from interpretMessage with cmd: 
+[2020-12-14 19:18:42.52]
+{
+  "quantity": {
+    "flour": 1.5,
+    "vanilla": 3,
+    "sugar": 1.5,
+    "egg": 3,
+    "chocolate": 4
+  },
+  "price": {
+    "value": 12.92,
+    "unit": "USD"
+  },
+  "type": "SellOffer",
+  "metadata": {
+    "text": "Because your total is over 5 dollars I will offer a discount of 1 dollar. You will get 1.5 flour 3 vanilla 1.5 sugar 3 egg 4 chocolate for  the discounted price of 12.92 USD.",
+    "speaker": "Celia",
+    "role": "seller",
+    "addressee": "Human",
+    "environmentUUID": "abcdefg",
+    "timeStamp": "2020-12-15T00:18:42.521Z",
+    "roundId": 0
+  }
+}
+[2020-12-14 19:18:43.02]
+{
+  "classifier_id": "DefaultCustomModel_1759596825",
+  "name": "Default Custom Model",
+  "classes": [
+    {
+      "class": "cake",
+      "score": 0.914
+    },
+    {
+      "class": "pancake",
+      "score": 0.04
+    }
+  ]
+}
+[2020-12-14 19:18:43.02]
+{
+  "classifier_id": "DefaultCustomModel_1759596825",
+  "name": "Default Custom Model",
+  "classes": [
+    {
+      "class": "cake",
+      "score": 0.914
+    },
+    {
+      "class": "pancake",
+      "score": 0.04
+    }
+  ]
+}
+[2020-12-14 19:18:43.02] In interpretImage, watsonResponse is: 
+[2020-12-14 19:18:43.02]
+{
+  "classifier_id": "DefaultCustomModel_1759596825",
+  "name": "Default Custom Model",
+  "classes": [
+    {
+      "class": "cake",
+      "score": 0.914
+    },
+    {
+      "class": "pancake",
+      "score": 0.04
+    }
+  ]
+}
+[2020-12-14 19:18:43.02] Returning from interpretImage with cmd: 
+[2020-12-14 19:18:43.02]
+{
+  "type": "cake"
+}
+[2020-12-14 19:18:43.02] The image was interpreted as a cake
+[2020-12-14 19:18:43.02] Returning from interpretMessage with cmd: 
+[2020-12-14 19:18:43.02]
+{
+  "quantity": {
+    "flour": 1.5,
+    "vanilla": 3,
+    "sugar": 1.5,
+    "egg": 3,
+    "chocolate": 4
+  },
+  "type": "ImageRequest",
+  "metadata": {
+    "speaker": "Human",
+    "text": "Can I get the item in this image: https://assets.bonappetit.com/photos/59c924dc32e4b84f5a9e437a/16:9/w_2560%2Cc_limit/1017%252520WEB%252520WEEK1060.jpg",
+    "role": "buyer",
+    "environmentUUID": "abcdefg",
+    "timestamp": 1607991520341,
+    "roundId": 0,
+    "timeStamp": "2020-12-15T00:18:43.027Z"
+  }
+}
+[2020-12-14 19:18:43.02] Proposed bid is: 
+[2020-12-14 19:18:43.02]
+{
+  "quantity": {
+    "flour": 1.5,
+    "vanilla": 3,
+    "sugar": 1.5,
+    "egg": 3,
+    "chocolate": 4
+  },
+  "type": "SellOffer",
+  "price": {
+    "unit": "USD",
+    "value": 12.8
+  }
+}
+[2020-12-14 19:18:44.00] In interpretMessage, watsonResponse is: 
+[2020-12-14 19:18:44.00]
+{
+  "intents": [
+    {
+      "intent": "Offer",
+      "confidence": 0.6260951042175293
+    },
+    {
+      "intent": "Quantity",
+      "confidence": 0.25319927334785464
+    },
+    {
+      "intent": "AcceptOffer",
+      "confidence": 0.25015895366668706
+    },
+    {
+      "intent": "Discount",
+      "confidence": 0.22823133468627932
+    },
+    {
+      "intent": "Information",
+      "confidence": 0.2254733979701996
+    },
+    {
+      "intent": "NegotiatePrice",
+      "confidence": 0.22046040296554567
+    },
+    {
+      "intent": "HighPrice",
+      "confidence": 0.21932980716228487
+    },
+    {
+      "intent": "Quality",
+      "confidence": 0.21304094195365908
+    },
+    {
+      "intent": "ImageRequest",
+      "confidence": 0.21258673369884493
+    },
+    {
+      "intent": "Where",
+      "confidence": 0.20601274594664576
+    }
+  ],
+  "entities": [
+    {
+      "entity": "sys-currency",
+      "location": [
+        27,
+        36
+      ],
+      "value": "5",
+      "confidence": 1,
+      "metadata": {
+        "numeric_value": 5,
+        "unit": "USD"
+      },
+      "interpretation": {
+        "numeric_value": 5,
+        "unit": "USD"
+      }
+    },
+    {
+      "entity": "sys-currency",
+      "location": [
+        64,
+        72
+      ],
+      "value": "1",
+      "confidence": 1,
+      "metadata": {
+        "numeric_value": 1,
+        "unit": "USD"
+      },
+      "interpretation": {
+        "numeric_value": 1,
+        "unit": "USD"
+      }
+    },
+    {
+      "entity": "sys-number",
+      "location": [
+        87,
+        90
+      ],
+      "value": "1.5",
+      "confidence": 1,
+      "metadata": {
+        "numeric_value": 1.5
+      },
+      "interpretation": {
+        "numeric_value": 1.5,
+        "subtype": "rational"
+      }
+    },
+    {
+      "entity": "good",
+      "location": [
+        91,
+        96
+      ],
+      "value": "flour",
+      "confidence": 1
+    },
+    {
+      "entity": "sys-number",
+      "location": [
+        97,
+        98
+      ],
+      "value": "3",
+      "confidence": 1,
+      "metadata": {
+        "numeric_value": 3
+      },
+      "interpretation": {
+        "numeric_value": 3,
+        "subtype": "integer"
+      }
+    },
+    {
+      "entity": "good",
+      "location": [
+        99,
+        106
+      ],
+      "value": "vanilla",
+      "confidence": 1
+    },
+    {
+      "entity": "sys-number",
+      "location": [
+        107,
+        110
+      ],
+      "value": "1.5",
+      "confidence": 1,
+      "metadata": {
+        "numeric_value": 1.5
+      },
+      "interpretation": {
+        "numeric_value": 1.5,
+        "subtype": "rational"
+      }
+    },
+    {
+      "entity": "good",
+      "location": [
+        111,
+        116
+      ],
+      "value": "sugar",
+      "confidence": 1
+    },
+    {
+      "entity": "sys-number",
+      "location": [
+        117,
+        118
+      ],
+      "value": "3",
+      "confidence": 1,
+      "metadata": {
+        "numeric_value": 3
+      },
+      "interpretation": {
+        "numeric_value": 3,
+        "subtype": "integer"
+      }
+    },
+    {
+      "entity": "good",
+      "location": [
+        119,
+        122
+      ],
+      "value": "egg",
+      "confidence": 1
+    },
+    {
+      "entity": "sys-number",
+      "location": [
+        123,
+        124
+      ],
+      "value": "4",
+      "confidence": 1,
+      "metadata": {
+        "numeric_value": 4
+      },
+      "interpretation": {
+        "numeric_value": 4,
+        "subtype": "integer"
+      }
+    },
+    {
+      "entity": "good",
+      "location": [
+        125,
+        134
+      ],
+      "value": "chocolate",
+      "confidence": 1
+    },
+    {
+      "entity": "sys-currency",
+      "location": [
+        164,
+        172
+      ],
+      "value": "11.8",
+      "confidence": 1,
+      "metadata": {
+        "numeric_value": 11.8,
+        "unit": "USD"
+      },
+      "interpretation": {
+        "numeric_value": 11.8,
+        "unit": "USD"
+      }
+    }
+  ],
+  "generic": [
+    {
+      "response_type": "text",
+      "text": "I didn't understand. You can try rephrasing."
+    }
+  ],
+  "input": {
+    "text": "Because your total is over 5 dollars I will offer a discount of 1 dollar. You will get 1.5 flour 3 vanilla 1.5 sugar 3 egg 4 chocolate for  the discounted price of 11.8 USD.",
+    "speaker": "Watson",
+    "role": "seller",
+    "addressee": "Human",
+    "environmentUUID": "abcdefg",
+    "timeStamp": "2020-12-15T00:18:43.028Z",
+    "roundId": 0
+  },
+  "addressee": "Human",
+  "speaker": "Watson",
+  "environmentUUID": "abcdefg"
+}
+[2020-12-14 19:18:44.00] Returning from interpretMessage with cmd: 
+[2020-12-14 19:18:44.00]
+{
+  "quantity": {
+    "flour": 1.5,
+    "vanilla": 3,
+    "sugar": 1.5,
+    "egg": 3,
+    "chocolate": 4
+  },
+  "price": {
+    "value": 11.8,
+    "unit": "USD"
+  },
+  "type": "SellOffer",
+  "metadata": {
+    "text": "Because your total is over 5 dollars I will offer a discount of 1 dollar. You will get 1.5 flour 3 vanilla 1.5 sugar 3 egg 4 chocolate for  the discounted price of 11.8 USD.",
+    "speaker": "Watson",
+    "role": "seller",
+    "addressee": "Human",
+    "environmentUUID": "abcdefg",
+    "timeStamp": "2020-12-15T00:18:44.004Z",
+    "roundId": 0
   }
 }

@@ -4,8 +4,8 @@ let logLevel = 1; // default log level
 setLogLevel(logLevel);
 
 function interpretImage(watsonResponse) {
-  logExpression("In interpretImage, watsonResponse is: ", 2);
-  logExpression(watsonResponse, 2);
+  logExpression("In interpretImage, watsonResponse is: ", 1);
+  logExpression(watsonResponse, 1);
   let bestClass = {};
   let bestScore = 0.0;
   for(i = 0; i < watsonResponse.classes.length; i++) {
@@ -29,8 +29,8 @@ function interpretImage(watsonResponse) {
   	  type: "unknown"
   	};
   }
-  logExpression("Returning from interpretImage with cmd: ", 2);
-  logExpression(cmd, 2);
+  logExpression("Returning from interpretImage with cmd: ", 1);
+  logExpression(cmd, 1);
   return cmd;
 }
 

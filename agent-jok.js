@@ -631,7 +631,7 @@ function processMessage(message) {
           };
           return messageResponse;
         } else if (addressee == agentName && interpretation.type == "NotUnderstood") { // The buyer said something, but we can't figure out what they meant. Just ignore them and hope they'll try again if it's important.
-          logExpression("I didn't understand this message; pretend it never happened.", 2);
+          logExpression("I didn't understand this message; pretend it never happened.", 1);
           let messageResponse = {
             text: "Sorry, Could you rephrase that?",
             speaker: agentName,
@@ -646,8 +646,8 @@ function processMessage(message) {
             if (!bidHistory[speaker]) bidHistory[speaker] = [];
             bidHistory[speaker].push(interpretation);
             let bid = generateBid(interpretation); // Generate bid based on message interpretation, utility, and the current state of negotiation with the buyer
-            logExpression("Proposed bid is: ", 2);
-            logExpression(bid, 2);
+            logExpression("Proposed bid is: ", 1);
+            logExpression(bid, 1);
             let bidResponse = {
               text: translateBid(bid, false), // Translate the bid into English
               speaker: agentName,
@@ -665,7 +665,7 @@ function processMessage(message) {
           }
         } else if(interpretation.type == "ImageRequest") {
           if(mayIRespond(message_speaker_role, addressee)) {
-            if (interpretation.quality == null){
+            if (interpretation.quantity == null){
               let bidResponse = {
                 text: "We could not recognize that image, sorry",
                 speaker: agentName,
@@ -679,8 +679,8 @@ function processMessage(message) {
               if (!bidHistory[speaker]) bidHistory[speaker] = [];
               bidHistory[speaker].push(interpretation);
               let bid = generateBid(interpretation);
-              logExpression("Proposed bid is: ", 2);
-              logExpression(bid, 2);
+              logExpression("Proposed bid is: ", 1);
+              logExpression(bid, 1);
               let bidResponse = {
                 text: translateBid(bid, false),
                 speaker:agentName,
@@ -693,7 +693,7 @@ function processMessage(message) {
               return bidResponse;
             }
           }else{
-            logExpression("I'm choosing not to do respond to this buy offer or request.", 2);
+            logExpression("I'm choosing not to do respond to this buy offer or request.", 1);
             logExpression(message, 2);
             return Promise.resolve(null);
           }

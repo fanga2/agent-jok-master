@@ -14,9 +14,9 @@ setLogLevel(logLevel);
 // From the intents and entities obtained from Watson Assistant, extract a structured representation
 // of the message
 
-function interpretMessage(watsonResponse) {
-  logExpression("In interpretMessage, watsonResponse is: ", 2);
-  logExpression(watsonResponse, 2);
+async function interpretMessage(watsonResponse) {
+  logExpression("In interpretMessage, watsonResponse is: ", 1);
+  logExpression(watsonResponse, 1);
   let intents = watsonResponse.intents;
   let entities = watsonResponse.entities;
   let cmd = {};
@@ -98,11 +98,11 @@ function interpretMessage(watsonResponse) {
       type: "Discount"
      };
   }else if (intents[0].intent == "ImageRequest" && intents[0].confidence > 0.2){
-  	let extractedImage = extractOfferFromImage(entities);
+  	let extractedImage = await extractOfferFromImage(watsonResponse);
   	cmd = {
-  	  quantity: extractedImage.quantity,
+  	  quantity: extractedImage,
   	  type: "ImageRequest"
-  	}
+  	};
   }else {
     cmd = {
       type: "NotUnderstood"
@@ -115,8 +115,8 @@ function interpretMessage(watsonResponse) {
     }
     cmd.metadata.timeStamp = new Date();
   }
-  logExpression("Returning from interpretMessage with cmd: ", 2);
-  logExpression(cmd, 2);
+  logExpression("Returning from interpretMessage with cmd: ", 1);
+  logExpression(cmd, 1);
   return cmd;
 }
 
@@ -215,38 +215,63 @@ function extractBidFromMessage(message) {
 }
 
 function extractOfferFromImage(entities){
-  let entities = JSON.parse(JSON.stringify(entityList));
-  let quantity = null;
-  entities.some(eBlock => {
+  /*let entities = JSON.parse(JSON.stringify(entityList));*/
+  logExpression(entities.generic[0].text, 1)
+  return classifyImage(entities.generic[0].text)
+  .then(classifiedImage => {
+  	logExpression(classifiedImage, 1);
+    return interpretImage(classifiedImage)
+  })
+  .then(interpretation => {
+  	if(interpretation.type == "cake"){
+      logExpression("The image was interpreted as a cake", 1);
+  	  return {
+  	    "flour": 1.5,
+  	    "vanilla": 3.0,
+  	    "sugar": 1.5,
+  	    "egg": 3.0,
+  	    "chocolate": 4.0
+  	  };
+  	}else if(interpretation.type == "pancake"){
+  	  logExpression("The image was interpreted as a pancake", 1);
+  	  return {
+  	    "flour": 1.5,
+  	    "sugar": 3.0,
+  	    "milk": 1.25,
+  	    "egg": 1.0
+  	  };
+    }else{
+  	  logExpression("The image was not recognized", 1);
+      return null;
+    }
+  });
+  /*entities.some(eBlock => {
   	if(eBlock.entity == "url") {
-  	  classifiedImage = classifyImage(eBlock.value);
+  	  classifiedImage = classifyImage(eBlock.generic.text);
   	  interpretation = interpretImage(classifiedImage);
   	  if(interpretation.type == "cake"){
-  	  	logExpression("The image was interpreted as a cake", 2)
+  	  	logExpression("The image was interpreted as a cake", 1);
   	  	quantity = {
   	  	  "flour": 1.5,
   	  	  "vanilla": 3.0,
   	  	  "sugar": 1.5,
   	  	  "egg": 3.0,
-  	  	  "chocolate" 4.0
-  	  	}
+  	  	  "chocolate": 4.0
+  	  	};
   	  }else if(interpretation.type == "pancake"){
-  	  	logExpression("The image was interpreted as a pancake", 2)
+  	  	logExpression("The image was interpreted as a pancake", 1);
   	  	quantity = {
   	  	  "flour": 1.5,
   	  	  "sugar": 3.0,
   	  	  "milk": 1.25,
   	  	  "egg": 1.0
-  	  	}
+  	  	};
   	  }else{
-  	  	logExpression("The image was not recognized", 2)
+  	  	logExpression("The image was not recognized", 1);
   	  }
   	  return true;
   	}
-  });
-  return {
-  	quantity
-  };
+  });*/
 }
 
 
