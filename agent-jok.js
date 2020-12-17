@@ -970,7 +970,6 @@ function updateBidTonalAnalyzor(input,bid){
   for ( let i =0; i<70; i++) {
     text+=input;
   }
-  console.log("here is tonal analysis");
   const PersonalityInsightsV3 = require('ibm-watson/personality-insights/v3');
   const {IamAuthenticator} = require('ibm-watson/auth');
   const personalityInsights = new PersonalityInsightsV3({
@@ -989,26 +988,28 @@ function updateBidTonalAnalyzor(input,bid){
     })
     .then(response => {
       if(response.result && response.status===200){
-        //do analysis here
         tone=response.result;
-        // console.log(JSON.stringify(tone, null, 2))
-        let res=1;
-        //if people sad give more discount
-        //else
+        let factor=1;
 
+        //level of cheerfulness is low, give 10 % discount
         if(tone.personality[3].children[2].percentile<0.3){
-          console.log(tone.personality[3].children[2].percentile,"ppp");
-          bid-=0.2
+          factor=0.95
         }else{
-          bid=bid
+          factor=1
         }
 
+        //level of happiness is low, also give 10 % discount
+        if(tone.personality[2].children[3].percentile<0.3){
+          factor=0.95
+        }else{
+          factor=1
+        }
+
+        bid*=factor
       }
     }).catch(err => {
     console.log('error: ', err);
   });
-
-  //give less discount
 
 }
 
