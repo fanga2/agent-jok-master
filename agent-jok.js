@@ -631,7 +631,7 @@ function processMessage(message) {
           };
           return messageResponse;
         } else if (addressee == agentName && interpretation.type == "NotUnderstood") { // The buyer said something, but we can't figure out what they meant. Just ignore them and hope they'll try again if it's important.
-          logExpression("I didn't understand this message; pretend it never happened.", 1);
+          logExpression("I didn't understand this message; pretend it never happened.", 2);
           let messageResponse = {
             text: "Sorry, Could you rephrase that?",
             speaker: agentName,
@@ -646,8 +646,8 @@ function processMessage(message) {
             if (!bidHistory[speaker]) bidHistory[speaker] = [];
             bidHistory[speaker].push(interpretation);
             let bid = generateBid(interpretation); // Generate bid based on message interpretation, utility, and the current state of negotiation with the buyer
-            logExpression("Proposed bid is: ", 1);
-            logExpression(bid, 1);
+            logExpression("Proposed bid is: ", 2);
+            logExpression(bid, 2);
             let bidResponse = {
               text: translateBid(bid, false), // Translate the bid into English
               speaker: agentName,
@@ -665,7 +665,7 @@ function processMessage(message) {
           }
         } else if(interpretation.type == "ImageRequest") {
           if(mayIRespond(message_speaker_role, addressee)) {
-            if (interpretation.quantity == null){
+            if (interpretation.quality == null){
               let bidResponse = {
                 text: "We could not recognize that image, sorry",
                 speaker: agentName,
@@ -679,8 +679,8 @@ function processMessage(message) {
               if (!bidHistory[speaker]) bidHistory[speaker] = [];
               bidHistory[speaker].push(interpretation);
               let bid = generateBid(interpretation);
-              logExpression("Proposed bid is: ", 1);
-              logExpression(bid, 1);
+              logExpression("Proposed bid is: ", 2);
+              logExpression(bid, 2);
               let bidResponse = {
                 text: translateBid(bid, false),
                 speaker:agentName,
@@ -693,7 +693,7 @@ function processMessage(message) {
               return bidResponse;
             }
           }else{
-            logExpression("I'm choosing not to do respond to this buy offer or request.", 1);
+            logExpression("I'm choosing not to do respond to this buy offer or request.", 2);
             logExpression(message, 2);
             return Promise.resolve(null);
           }
@@ -783,10 +783,48 @@ function processMessage(message) {
         }*/ else { // None of the specific cases are satisfied; don't take any action
           return Promise.resolve(null);
         }
-      } else if (message_speaker_role == "seller") { // Message was from another seller. A more clever agent might be able to exploit this info somehow!
+      } else if (message_speaker_role == "seller") { // Message was from another seller. Take advantage to undercut price if it fits utility fn
         logExpression("The other seller, " + speaker + ", sent this message: ", 2);
         logExpression(message, 2);
-        return Promise.resolve(null);
+		// Regular expression to determine offered price
+		let regexPrice = new RegExp(/\d{1,}\.\d{2}/);
+		let findPrice = message.text.match(regexPrice);		
+		
+		if(findprice != null && findprice > 0) { // Other seller's message contains a price; we can attempt to undercut
+			// Regular expression to determine what good(s) and quantities of each
+			let regexGoods = /\d{1,}\s\[a-z]{1,}/g;
+			let arrayGoods = message.text.match(regexGoods);
+			let n = arrayGoods.length;
+			let sumUtil = 0;
+			var i;
+			for(i=0; i<n; i++) {
+				let temp = arrayGoods[i].split(' ');
+				sumUtil += temp[0]*(utilityInfo.utility)[temp[1]].parameters.unitcost;
+			}
+			
+			if(sumUtil < findPrice * 0.9){ // If the total utility is less than a discount on the opponent, offer a discount
+				if (!bidHistory[speaker]) bidHistory[speaker] = [];
+	            bidHistory[speaker].push(interpretation);
+	            let bid = generateBid(interpretation); // Generate bid based on message interpretation, utility, and the current state of negotiation with the buyer
+	            logExpression("Proposed bid is: ", 2);
+	            logExpression(bid, 2);
+	            let bidResponse = {
+	              text: translateBid(bid, false), // Translate the bid into English
+	              speaker: agentName,
+	              role: "seller",
+	              addressee: speaker,
+	              environmentUUID: interpretation.metadata.environmentUUID,
+	              timeStamp: new Date()
+	            };
+	            bidResponse.bid = bid;
+	            return bidResponse;
+			} else { // If the opponent's price is too close to our utility, ignore
+				return Promise.resolve(null);
+			}
+			
+		} else { // Other seller isn't talking prices, so ignore'
+			return Promise.resolve(null);
+		}
       }
     })
     .catch(error => {
