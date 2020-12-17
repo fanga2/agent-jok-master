@@ -646,6 +646,7 @@ function processMessage(message) {
             if (!bidHistory[speaker]) bidHistory[speaker] = [];
             bidHistory[speaker].push(interpretation);
             let bid = generateBid(interpretation); // Generate bid based on message interpretation, utility, and the current state of negotiation with the buyer
+            updateBidTonalAnalyzor(interpretation.metadata.text,bid.quantity.price)
             logExpression("Proposed bid is: ", 2);
             logExpression(bid, 2);
             let bidResponse = {
@@ -663,9 +664,9 @@ function processMessage(message) {
             logExpression(message, 2);
             return Promise.resolve(null);
           }
-        } else if(interpretation.type == "ImageRequest") {
-          if(mayIRespond(message_speaker_role, addressee)) {
-            if (interpretation.quality == null){
+        } else if (interpretation.type == "ImageRequest") {
+          if (mayIRespond(message_speaker_role, addressee)) {
+            if (interpretation.quality == null) {
               let bidResponse = {
                 text: "We could not recognize that image, sorry",
                 speaker: agentName,
@@ -675,7 +676,7 @@ function processMessage(message) {
                 timeStamp: new Date()
               };
               return bidResponse;
-            }else{
+            } else {
               if (!bidHistory[speaker]) bidHistory[speaker] = [];
               bidHistory[speaker].push(interpretation);
               let bid = generateBid(interpretation);
@@ -683,7 +684,7 @@ function processMessage(message) {
               logExpression(bid, 2);
               let bidResponse = {
                 text: translateBid(bid, false),
-                speaker:agentName,
+                speaker: agentName,
                 role: "seller",
                 addressee: speaker,
                 environmentUUID: interpretation.metadata.environmentUUID,
@@ -692,15 +693,15 @@ function processMessage(message) {
               bidResponse.bid = bid;
               return bidResponse;
             }
-          }else{
+          } else {
             logExpression("I'm choosing not to do respond to this buy offer or request.", 2);
             logExpression(message, 2);
             return Promise.resolve(null);
           }
-        }else if (addressee == agentName && interpretation.type == "Quality") {
+        } else if (addressee == agentName && interpretation.type == "Quality") {
           messageResponse.text = selectMessage(qualityMessages);
           return messageResponse
-        } else if (addressee == agentName && interpretation.type == "HighPrice"){
+        } else if (addressee == agentName && interpretation.type == "HighPrice") {
           let messageResponse = {
             text: "I only offer the highest quality items, unfortunately this comes at a greater price. However, I do offer a discount of $1 USD for purchases greater than $5 USD.",
             speaker: agentName,
@@ -710,13 +711,13 @@ function processMessage(message) {
             timeStamp: new Date()
           };
           return messageResponse;
-        } else if (addressee == agentName && interpretation.type == "Help"){
+        } else if (addressee == agentName && interpretation.type == "Help") {
           let messageResponse = {
-            text: "Here are some things you can tell me:\n"+agentName+", I'd like to buy two cups of milk.\n"+
-            agentName+", I'd like to buy 10 eggs for $7.\n"+agentName+", I accept your offer.\n"+agentName+", I reject your offer.\n"+
-            agentName+", what are you selling?\n"+agentName+", do you have the best milk?\n"+
-            agentName+", I notice your prices are very high.\n"+agentName+", how many eggs do you have in stock?\n"+
-            agentName+", where are your products from?"+agentName+", do you have any special deals?"+agentName+", how can I negotiate with you?",
+            text: "Here are some things you can tell me:\n" + agentName + ", I'd like to buy two cups of milk.\n" +
+              agentName + ", I'd like to buy 10 eggs for $7.\n" + agentName + ", I accept your offer.\n" + agentName + ", I reject your offer.\n" +
+              agentName + ", what are you selling?\n" + agentName + ", do you have the best milk?\n" +
+              agentName + ", I notice your prices are very high.\n" + agentName + ", how many eggs do you have in stock?\n" +
+              agentName + ", where are your products from?" + agentName + ", do you have any special deals?" + agentName + ", how can I negotiate with you?",
             speaker: agentName,
             role: "seller",
             addressee: speaker,
@@ -724,7 +725,7 @@ function processMessage(message) {
             timeStamp: new Date()
           };
           return messageResponse;
-        } else if (addressee == agentName && interpretation.type == "WhatGoods"){
+        } else if (addressee == agentName && interpretation.type == "WhatGoods") {
           let messageResponse = {
             text: "I have Eggs (unit: each), Milk (unit: cup), Sugar (unit: cup), Flour (unit: cup), Chocolate (unit: ounce), Vanilla (unit: teaspoon) and Blueberries (unit: pack) for sale.",
             speaker: agentName,
@@ -734,10 +735,10 @@ function processMessage(message) {
             timeStamp: new Date()
           };
           return messageResponse;
-        }  else if (addressee == agentName && interpretation.type == "Quantity"){
+        } else if (addressee == agentName && interpretation.type == "Quantity") {
           let numb = Math.floor(Math.random() * 151) + 100;
           let messageResponse = {
-            text: "I have "+numb+" in stock.",
+            text: "I have " + numb + " in stock.",
             speaker: agentName,
             role: "seller",
             addressee: speaker,
@@ -745,7 +746,7 @@ function processMessage(message) {
             timeStamp: new Date()
           };
           return messageResponse;
-        } else if (addressee == agentName && interpretation.type == "Where"){
+        } else if (addressee == agentName && interpretation.type == "Where") {
           let messageResponse = {
             text: "All our goods are locally sourced, except for the vanilla and chocolate which are imported from Brazil.",
             speaker: agentName,
@@ -755,7 +756,7 @@ function processMessage(message) {
             timeStamp: new Date()
           };
           return messageResponse;
-        } else if (addressee == agentName && interpretation.type == "Discount"){
+        } else if (addressee == agentName && interpretation.type == "Discount") {
           let messageResponse = {
             text: "Currently we are offering a discount of $1 on any purchases over $5.",
             speaker: agentName,
@@ -786,45 +787,45 @@ function processMessage(message) {
       } else if (message_speaker_role == "seller") { // Message was from another seller. Take advantage to undercut price if it fits utility fn
         logExpression("The other seller, " + speaker + ", sent this message: ", 2);
         logExpression(message, 2);
-		// Regular expression to determine offered price
-		let regexPrice = new RegExp(/\d{1,}\.\d{2}/);
-		let findPrice = message.text.match(regexPrice);		
-		
-		if(findprice != null && findprice > 0) { // Other seller's message contains a price; we can attempt to undercut
-			// Regular expression to determine what good(s) and quantities of each
-			let regexGoods = /\d{1,}\s\[a-z]{1,}/g;
-			let arrayGoods = message.text.match(regexGoods);
-			let n = arrayGoods.length;
-			let sumUtil = 0;
-			var i;
-			for(i=0; i<n; i++) {
-				let temp = arrayGoods[i].split(' ');
-				sumUtil += temp[0]*(utilityInfo.utility)[temp[1]].parameters.unitcost;
-			}
-			
-			if(sumUtil < findPrice * 0.9){ // If the total utility is less than a discount on the opponent, offer a discount
-				if (!bidHistory[speaker]) bidHistory[speaker] = [];
-	            bidHistory[speaker].push(interpretation);
-	            let bid = generateBid(interpretation); // Generate bid based on message interpretation, utility, and the current state of negotiation with the buyer
-	            logExpression("Proposed bid is: ", 2);
-	            logExpression(bid, 2);
-	            let bidResponse = {
-	              text: translateBid(bid, false), // Translate the bid into English
-	              speaker: agentName,
-	              role: "seller",
-	              addressee: speaker,
-	              environmentUUID: interpretation.metadata.environmentUUID,
-	              timeStamp: new Date()
-	            };
-	            bidResponse.bid = bid;
-	            return bidResponse;
-			} else { // If the opponent's price is too close to our utility, ignore
-				return Promise.resolve(null);
-			}
-			
-		} else { // Other seller isn't talking prices, so ignore'
-			return Promise.resolve(null);
-		}
+        // Regular expression to determine offered price
+        let regexPrice = new RegExp(/\d{1,}\.\d{2}/);
+        let findPrice = message.text.match(regexPrice);
+
+        if (findprice != null && findprice > 0) { // Other seller's message contains a price; we can attempt to undercut
+          // Regular expression to determine what good(s) and quantities of each
+          let regexGoods = /\d{1,}\s\[a-z]{1,}/g;
+          let arrayGoods = message.text.match(regexGoods);
+          let n = arrayGoods.length;
+          let sumUtil = 0;
+          var i;
+          for (i = 0; i < n; i++) {
+            let temp = arrayGoods[i].split(' ');
+            sumUtil += temp[0] * (utilityInfo.utility)[temp[1]].parameters.unitcost;
+          }
+
+          if (sumUtil < findPrice * 0.9) { // If the total utility is less than a discount on the opponent, offer a discount
+            if (!bidHistory[speaker]) bidHistory[speaker] = [];
+            bidHistory[speaker].push(interpretation);
+            let bid = generateBid(interpretation); // Generate bid based on message interpretation, utility, and the current state of negotiation with the buyer
+            logExpression("Proposed bid is: ", 2);
+            logExpression(bid, 2);
+            let bidResponse = {
+              text: translateBid(bid, false), // Translate the bid into English
+              speaker: agentName,
+              role: "seller",
+              addressee: speaker,
+              environmentUUID: interpretation.metadata.environmentUUID,
+              timeStamp: new Date()
+            };
+            bidResponse.bid = bid;
+            return bidResponse;
+          } else { // If the opponent's price is too close to our utility, ignore
+            return Promise.resolve(null);
+          }
+
+        } else { // Other seller isn't talking prices, so ignore'
+          return Promise.resolve(null);
+        }
       }
     })
     .catch(error => {
@@ -961,3 +962,53 @@ function options2URL(options) {
   if (options.path) url += options.path;
   return url;
 }
+
+
+function updateBidTonalAnalyzor(input,bid){
+
+  let text="";
+  for ( let i =0; i<70; i++) {
+    text+=input;
+  }
+  console.log("here is tonal analysis");
+  const PersonalityInsightsV3 = require('ibm-watson/personality-insights/v3');
+  const {IamAuthenticator} = require('ibm-watson/auth');
+  const personalityInsights = new PersonalityInsightsV3({
+    authenticator: new IamAuthenticator({apikey: 'ZhQjahXZKu3tK-oucJ-zB9JlNeVUHDWG7_74poGjXSWg'}),
+    version: '2016-10-19',
+    serviceUrl: 'https://api.us-south.personality-insights.watson.cloud.ibm.com/instances/eeadf03f-3f0e-467b-a118-718bdce40e38'
+  });
+
+  let tone={};
+
+  personalityInsights.profile(
+    {
+      content: text,
+      contentType: 'text/plain',
+      consumptionPreferences: true
+    })
+    .then(response => {
+      if(response.result && response.status===200){
+        //do analysis here
+        tone=response.result;
+        // console.log(JSON.stringify(tone, null, 2))
+        let res=1;
+        //if people sad give more discount
+        //else
+
+        if(tone.personality[3].children[2].percentile<0.3){
+          console.log(tone.personality[3].children[2].percentile,"ppp");
+          bid-=0.2
+        }else{
+          bid=bid
+        }
+
+      }
+    }).catch(err => {
+    console.log('error: ', err);
+  });
+
+  //give less discount
+
+}
+
